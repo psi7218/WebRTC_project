@@ -27,9 +27,18 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased mx-auto max-x-screen-xl `}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased px-5 h-screen items-center justify-center`}
       >
-        {children}
+        <div
+          className="  mx-auto            /* 수평 중앙 정렬 */
+            max-w-screen-3xl    /* 최대 너비를 제한 */
+            my-auto 
+            h-screen
+            rounded-3xl       /* 둥근 모서리 */
+            bg-black"
+        >
+          {children}
+        </div>
       </body>
     </html>
   );

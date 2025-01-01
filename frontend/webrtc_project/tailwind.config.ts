@@ -13,6 +13,8 @@ export default {
         foreground: "var(--foreground)",
         chattinggrid: "#424242",
         othergrid: "#2F2F2F",
+        tabbordercolor: "#fb923c",
+        tabbgcolor: "#fff7ed",
       },
     },
   },
