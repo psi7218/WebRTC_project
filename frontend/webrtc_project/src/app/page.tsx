@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import PlusGrid from "@/components/PlusGrid";
 import QuickJoinGrid from "@/components/QuickJoinGrid";
@@ -5,8 +7,13 @@ import ScheduleGrid from "@/components/ScheduleGrid";
 import SettingGrid from "@/components/SettingGrid";
 import NotificationsGrid from "@/components/NotificationsGrid";
 import RecoringsGrid from "@/components/RecordingsGrid";
-
+import { useRouter } from "next/navigation";
 const Home = () => {
+  const router = useRouter();
+
+  const navigate = () => {
+    router.push("/tab");
+  };
   return (
     <div>
       {/* Top Navigation */}
@@ -29,7 +36,7 @@ const Home = () => {
       <main className="p-6">
         <div className="grid grid-cols-3 gap-10 grid-rows-2 ">
           <PlusGrid />
-          <QuickJoinGrid />
+          <QuickJoinGrid onClick={() => navigate()} />
           <ScheduleGrid />
 
           <SettingGrid />

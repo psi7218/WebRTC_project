@@ -1,9 +1,12 @@
 import React from "react";
 import { MessageSquare } from "lucide-react";
 
-const QuickJoinGrid = () => {
+interface QuickJoinGridProps {
+  onClick?: () => void;
+}
+const QuickJoinGrid = ({ onClick }: QuickJoinGridProps) => {
   return (
-    <div className="other-grid">
+    <div className="other-grid" onClick={onClick}>
       <MessageSquare className="w-8 h-8 text-blue-500 mb-4" />
       <h3 className="grid-title">Quick Join</h3>
       <div className="flex mt-4 space-x-2">
