@@ -1,46 +1,42 @@
-import {
-  Bell,
-  MessageSquare,
-  Video,
-  Calendar,
-  Settings,
-  Home,
-  Lock,
-  Unlock,
-} from "lucide-react";
+"use client";
+
+import Image from "next/image";
+import { channels } from "@/dummydata/data";
+import { useState } from "react";
+import { Plus } from "lucide-react";
 
 const SideTab = () => {
+  const [channelList, setChannelList] = useState(channels);
+
   return (
-    <div className="w-[8%] min-h-screen rounded-tl-3xl rounded-bl-3xl flex flex-col items-center ">
-      {/* 로고 영역 */}
+    <div className="min-h-screen">
       <div className="min-h-[10%] min-w-full flex justify-center items-center h-20 ">
-        <Lock className="text-white " />
+        <p className="text-white">ICON</p>
       </div>
 
-      <div className="flex flex-col items-center min-w-full pt-10">
-        <div className="group tab-div">
-          <Home className="tab-icon" />
+      <main className="min-h-[90%] flex flex-col gap-2 mt-4 justify-center items-center">
+        {channelList.map((channel) => (
+          <span key={channel.id} className="">
+            {channel.image ? (
+              <Image
+                src={channel.image}
+                alt={channel.name}
+                className="w-14 h-14 object-cover rounded-full overflow-hidden"
+                width={14}
+                height={14}
+                unoptimized
+              ></Image>
+            ) : (
+              <div className="w-14 h-14 text-white rounded-full bg-[#363940] overflow-hidden whitespace-nowrap flex items-center justify-center">
+                {channel.name}
+              </div>
+            )}
+          </span>
+        ))}
+        <div className="w-14 h-14 text-white rounded-full bg-[#363940] overflow-hidden whitespace-nowrap flex items-center justify-center">
+          <Plus size={24} color="green" />
         </div>
-        <div className="group tab-div">
-          <Bell className="tab-icon" />
-        </div>
-
-        <div className="group tab-div">
-          <MessageSquare className="tab-icon" />
-        </div>
-
-        <div className="group tab-div">
-          <Video className="tab-icon" />
-        </div>
-
-        <div className="group tab-div">
-          <Calendar className="tab-icon" />
-        </div>
-
-        <div className="group tab-div">
-          <Settings className="tab-icon" />
-        </div>
-      </div>
+      </main>
     </div>
   );
 };

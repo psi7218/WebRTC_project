@@ -1,49 +1,20 @@
-"use client";
-
 import React from "react";
-import PlusGrid from "@/components/PlusGrid";
-import QuickJoinGrid from "@/components/QuickJoinGrid";
-import ScheduleGrid from "@/components/ScheduleGrid";
-import SettingGrid from "@/components/SettingGrid";
-import NotificationsGrid from "@/components/NotificationsGrid";
-import RecoringsGrid from "@/components/RecordingsGrid";
-import { useRouter } from "next/navigation";
+import SideTab from "@/components/SideTab";
 const Home = () => {
-  const router = useRouter();
-
-  const navigate = () => {
-    router.push("/tab");
-  };
   return (
-    <div>
-      {/* Top Navigation */}
-      <nav className="bg-gray-800 px-4 py-3 flex items-center justify-between rounded-tl-3xl rounded-tr-3xl">
-        <div className="flex items-center space-x-3">
-          <div className="flex space-x-2">
-            <div className="w-3 h-3 rounded-full bg-red-500"></div>
-            <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-            <div className="w-3 h-3 rounded-full bg-green-500"></div>
-          </div>
-          <span className="text-xl text-white font-semibold">Temper</span>
-        </div>
-        <div className="flex items-center space-x-4">
-          <span className="text-white">Admin</span>
-          <div className="w-8 h-8 rounded-full bg-gray-600"></div>
-        </div>
-      </nav>
-
-      {/* Main Content */}
-      <main className="p-6">
-        <div className="grid grid-cols-3 gap-10 grid-rows-2 ">
-          <PlusGrid />
-          <QuickJoinGrid onClick={() => navigate()} />
-          <ScheduleGrid />
-
-          <SettingGrid />
-          <NotificationsGrid />
-          <RecoringsGrid />
-        </div>
+    <div className="flex">
+      {/* sideTab - channel */}
+      <main className="w-[6%] min-h-screen">
+        <SideTab />
       </main>
+      <div className="bg-[#303136] w-[94%] min-h-screen rounded-tl-2xl flex">
+        <div className="w-[20%] min-h-screen">
+          <p>dm container</p>
+        </div>
+        <div className="bg-[#363940] w-[80%] min-h-screen">
+          <p>big container</p>
+        </div>
+      </div>
     </div>
   );
 };
