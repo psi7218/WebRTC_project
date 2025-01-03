@@ -10,3 +10,24 @@ export const channels = [
     image: "https://ifh.cc/g/vBlsty.png",
   },
 ];
+
+export const friends = [
+  {
+    id: 1,
+    name: "friend1",
+    image: "https://ifh.cc/g/bXNGqc.png",
+    status: "online",
+  },
+  {
+    id: 2,
+    name: "friend2",
+    image: "https://ifh.cc/g/vBlsty.png",
+    status: "offline",
+  },
+  {
+    id: 3,
+    name: "friend3",
+    image: "",
+    status: "away",
+  },
+];
