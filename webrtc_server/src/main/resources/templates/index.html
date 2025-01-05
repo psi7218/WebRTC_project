@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WebSocket Test</title>
+</head>
+<body>
+<h1>WebRTC WebSocket Test</h1>
+<button onclick="connectWebSocket()">Connect</button>
+<button onclick="sendMessage()">Send Message</button>
+<script>
+    let socket;
+
+    function connectWebSocket() {
+        socket = new WebSocket("ws://localhost:8080/ws");
+        socket.onopen = () => console.log("WebSocket connected");
+        socket.onmessage = (event) => console.log("Message received:", event.data);
+        socket.onclose = () => console.log("WebSocket disconnected");
+    }
+
+    function sendMessage() {
+        if (socket && socket.readyState === WebSocket.OPEN) {
+            socket.send("Hello from client!");
+        }
+    }
+</script>
+</body>
+</html>
