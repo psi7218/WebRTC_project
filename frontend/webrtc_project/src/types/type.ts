@@ -9,3 +9,16 @@ export interface Friend {
 }
 
 export type BgColorType = keyof typeof bgcolors;
+
+interface ChannelProps {
+  id: number;
+  name: string;
+  type: "chatting" | "voice";
+}
+export interface ServerProps {
+  id: number;
+  name: string;
+  serverAdmin: number;
+  image: string;
+  channels: ChannelProps[];
+}
