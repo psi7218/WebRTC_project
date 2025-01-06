@@ -5,10 +5,15 @@ import { friends } from "@/dummydata/data";
 
 import { Plus, BellRing } from "lucide-react";
 import PersonalThumbnail from "./ui/PersonalThumbnail";
+import { useRouter } from "next/navigation";
 
 const Lobby = () => {
   const [friendList, setFriendList] = useState(friends);
+  const router = useRouter();
 
+  const gotoDMDialog = (friendId: number) => {
+    router.push(`/channels/me/${friendId}`);
+  };
   return (
     <>
       <input
@@ -43,7 +48,11 @@ const Lobby = () => {
 
       <div className="space-y-1">
         {friendList.map((friend) => (
-          <div key={friend.id} className="flex justify-start mg-3 gap-2.5 p-1">
+          <div
+            key={friend.id}
+            className="flex justify-start mg-3 gap-2.5 p-1"
+            onClick={() => gotoDMDialog(friend.id)}
+          >
             <PersonalThumbnail
               logo_color={friend.logo_color}
               thumbnail={friend.thumbnail}

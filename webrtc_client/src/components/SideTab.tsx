@@ -6,17 +6,27 @@ import { useState } from "react";
 import { Plus } from "lucide-react";
 import useCurrentTab from "@/store/useCurrentTab";
 import { ServerProps } from "@/types/type";
+import { useRouter } from "next/navigation";
+import { channel } from "diagnostics_channel";
 
 const SideTab = () => {
+  const router = useRouter();
   const [serverList, setServerList] = useState(servers);
   const { setCurrentServer } = useCurrentTab();
 
   const gotoDMTab = () => {
     setCurrentServer(null);
+    router.push("/channels/me");
   };
 
   const gotoSpecificServer = (server: ServerProps) => {
     setCurrentServer(server);
+
+    const defaultchannel = server.channels[0];
+
+    router.push(
+      "/channels/" + server.serverId + "/" + defaultchannel["channelId"]
+    );
   };
   return (
     <div className="min-h-screen">
@@ -30,14 +40,14 @@ const SideTab = () => {
       <div className="min-h-[90%] flex flex-col gap-2 mt-4 justify-center items-center">
         {serverList.map((server: ServerProps) => (
           <span
-            key={server.id}
+            key={server.serverId}
             className=""
             onClick={() => gotoSpecificServer(server)}
           >
             {server.image ? (
               <Image
                 src={server.image}
-                alt={server.name}
+                alt={server.serverName}
                 className="w-12 h-12 object-cover rounded-full overflow-hidden"
                 width={14}
                 height={14}
@@ -45,7 +55,7 @@ const SideTab = () => {
               ></Image>
             ) : (
               <div className="w-12 h-12 text-white rounded-full bg-[#363940] overflow-hidden whitespace-nowrap flex items-center justify-center">
-                {server.name}
+                {server.serverName}
               </div>
             )}
           </span>
