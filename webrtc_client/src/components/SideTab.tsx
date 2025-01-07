@@ -7,12 +7,18 @@ import { Plus } from "lucide-react";
 import useCurrentTab from "@/store/useCurrentTab";
 import { ServerProps } from "@/types/type";
 import { useRouter } from "next/navigation";
-import { channel } from "diagnostics_channel";
+
+import Modal from "./Modal";
 
 const SideTab = () => {
   const router = useRouter();
   const [serverList, setServerList] = useState(servers);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const { setCurrentServer } = useCurrentTab();
+
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
 
   const gotoDMTab = () => {
     setCurrentServer(null);
@@ -60,9 +66,27 @@ const SideTab = () => {
             )}
           </span>
         ))}
-        <div className="w-12 h-12 text-white rounded-full bg-[#363940] overflow-hidden whitespace-nowrap flex items-center justify-center">
+        <div
+          className="w-12 h-12 text-white rounded-full bg-[#363940] overflow-hidden whitespace-nowrap flex items-center justify-center"
+          onClick={openModal}
+        >
           <Plus size={24} color="green" />
         </div>
+        <Modal isOpen={isModalOpen}>
+          <div className="fixed inset-0 z-50 flex items-center justify-center">
+            {/* 배경 오버레이 */}
+            <div
+              className="absolute inset-0 bg-black/60"
+              onClick={closeModal}
+            />
+            {/* 모달 내용 */}
+            <div className="relative z-50 bg-[#363940] rounded-md p-6 w-[480px] text-white">
+              <h2 className="text-xl font-bold mb-4">서버 만들기</h2>
+              <p className="text-gray-400">나만의 서버를 만들어보세요</p>
+              {/* 여기에 서버 생성 폼 추가 */}
+            </div>
+          </div>
+        </Modal>
       </div>
     </div>
   );

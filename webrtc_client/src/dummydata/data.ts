@@ -4,7 +4,7 @@ import { ServerProps } from "@/types/type";
 export const servers: ServerProps[] = [
   {
     serverId: 1,
-    serverName: "channel123123123",
+    serverName: "server123123123",
     serverAdmin: 231124112, // todo: 관리자 한명으로 했지만 추후에 권한을 가진 사람들로 변경
     image: "https://ifh.cc/g/bXNGqc.png",
     channels: [
@@ -18,11 +18,21 @@ export const servers: ServerProps[] = [
         name: "channel2",
         type: "voice",
       },
+      {
+        channelId: 11,
+        name: "channel11",
+        type: "voice",
+      },
+      {
+        channelId: 21,
+        name: "channel21",
+        type: "voice",
+      },
     ],
   },
   {
     serverId: 2,
-    serverName: "channel2",
+    serverName: "server2",
     serverAdmin: 24112,
     image: "https://ifh.cc/g/vBlsty.png",
     channels: [

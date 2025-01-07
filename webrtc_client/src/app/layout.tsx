@@ -43,6 +43,7 @@ export default function RootLayout({
             <div className="bg-[#363940] w-[80%] min-h-screen">{children}</div>
           </main>
         </div>
+        <div id="modal-root"></div>
       </body>
     </html>
   );
