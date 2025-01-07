@@ -1,39 +1,42 @@
 package api.webrtc_server.dto;
 
 public class ChannelDTO {
-    private long id;
-    private String name;
-    private String type;
+    private Long channelId; // 엔티티와 맞추기 위해 "channelId"로 변경
+    private String channelName; // 필드명 통일
+    private String channelType; // 필드명 통일
 
-    // Constructor
-    public ChannelDTO(long id, String name, String type) {
-        this.id = id;
-        this.name = name;
-        this.type = type;
+    // 기본 생성자
+    public ChannelDTO() {}
+
+    // 생성자
+    public ChannelDTO(Long channelId, String channelName, String channelType) {
+        this.channelId = channelId;
+        this.channelName = channelName;
+        this.channelType = channelType;
     }
 
     // Getters and Setters
-    public long getId() {
-        return id;
+    public Long getChannelId() {
+        return channelId;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setChannelId(Long channelId) {
+        this.channelId = channelId;
     }
 
-    public String getName() {
-        return name;
+    public String getChannelName() {
+        return channelName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setChannelName(String channelName) {
+        this.channelName = channelName;
     }
 
-    public String getType() {
-        return type;
+    public String getChannelType() {
+        return channelType;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setChannelType(String channelType) {
+        this.channelType = channelType;
     }
 }

@@ -1,69 +1,41 @@
 package api.webrtc_server.controller;
 
-import api.webrtc_server.dto.ChannelDTO;
 import api.webrtc_server.dto.ServerDTO;
-import org.springframework.web.bind.annotation.*;
+import api.webrtc_server.entity.ServerEntity;
+import api.webrtc_server.entity.UserEntity;
+import api.webrtc_server.repository.ServerRepository;
+import api.webrtc_server.repository.UserRepository;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/servers")
 public class ServerController {
 
-    // 서버와 채널을 저장하는 맵
-    private final Map<Long, ServerDTO> servers = new ConcurrentHashMap<>();
-    private long nextServerId = 1;
-    private long nextChannelId = 1;
+    private final ServerRepository serverRepository;
+    private final UserRepository userRepository;
 
-    // 1. 서버 생성
-    @PostMapping("/create")
-    public ServerDTO createServer(@RequestBody Map<String, Object> payload) {
-        String serverName = (String) payload.get("serverName");
-        long serverAdmin = ((Number) payload.get("serverAdmin")).longValue();
-        String image = (String) payload.get("image");
-
-        long serverId = nextServerId++;
-        ServerDTO newServer = new ServerDTO(serverId, serverName, serverAdmin, image, new ArrayList<>());
-        servers.put(serverId, newServer);
-
-        return newServer;
+    public ServerController(ServerRepository serverRepository, UserRepository userRepository) {
+        this.serverRepository = serverRepository;
+        this.userRepository = userRepository;
     }
 
-    // 2. 채널 생성
-    @PostMapping("/{serverId}/channels/create")
-    public ChannelDTO createChannel(
-            @PathVariable long serverId,
-            @RequestBody Map<String, Object> payload) {
+    @PostMapping
+    public ServerEntity createServer(@RequestBody ServerDTO serverDTO) {
+        UserEntity serverAdmin = userRepository.findById(serverDTO.getServerAdminId())
+                .orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + serverDTO.getServerAdminId()));
 
-        String channelName = (String) payload.get("channelName");
-        String channelType = (String) payload.get("channelType");
 
-        ServerDTO server = servers.get(serverId);
-        if (server == null) {
-            throw new IllegalArgumentException("Server not found");
-        }
+        ServerEntity server = new ServerEntity();
+        server.setServerName(serverDTO.getServerName());
+        server.setServerThumbnail(serverDTO.getImage());
+        server.setServerAdmin(serverAdmin);
 
-        long channelId = nextChannelId++;
-        ChannelDTO newChannel = new ChannelDTO(channelId, channelName, channelType);
-        server.getChannels().add(newChannel);
-
-        return newChannel;
+        return serverRepository.save(server);
     }
 
-    // 3. 특정 서버의 채널 목록 가져오기
-    @GetMapping("/{serverId}/channels")
-    public List<ChannelDTO> getChannels(@PathVariable long serverId) {
-        ServerDTO server = servers.get(serverId);
-        if (server == null) {
-            throw new IllegalArgumentException("Server not found");
-        }
-        return server.getChannels();
-    }
-
-    // 4. 모든 서버 목록 반환
-    @GetMapping
-    public List<ServerDTO> getAllServers() {
-        return new ArrayList<>(servers.values());
-    }
 }

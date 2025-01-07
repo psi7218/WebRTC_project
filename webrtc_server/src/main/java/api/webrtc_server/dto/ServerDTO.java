@@ -2,18 +2,18 @@ package api.webrtc_server.dto;
 
 import java.util.List;
 
-public class ServerDTO {
+public class    ServerDTO {
     private long serverId;
     private String serverName;
-    private long serverAdmin;
+    private long serverAdminId;
     private String image;
     private List<ChannelDTO> channels;
 
     // Constructor
-    public ServerDTO(long serverId, String serverName, long serverAdmin, String image, List<ChannelDTO> channels) {
+    public ServerDTO(long serverId, String serverName, long serverAdminId, String image, List<ChannelDTO> channels) {
         this.serverId = serverId;
         this.serverName = serverName;
-        this.serverAdmin = serverAdmin;
+        this.serverAdminId = serverAdminId;
         this.image = image;
         this.channels = channels;
     }
@@ -35,12 +35,12 @@ public class ServerDTO {
         this.serverName = serverName;
     }
 
-    public long getServerAdmin() {
-        return serverAdmin;
+    public long getServerAdminId() {
+        return serverAdminId;
     }
 
-    public void setServerAdmin(long serverAdmin) {
-        this.serverAdmin = serverAdmin;
+    public void setServerAdminId(long serverAdmin) {
+        this.serverAdminId = serverAdminId;
     }
 
     public String getImage() {
