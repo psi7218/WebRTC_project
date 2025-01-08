@@ -22,3 +22,11 @@ export interface ServerProps {
   image: string;
   channels: ChannelProps[];
 }
+
+export interface MessageProps {
+  messageId: number;
+  channelId: number;
+  senderId: number;
+  content: string;
+  createdAt: string;
+}
