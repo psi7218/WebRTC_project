@@ -1,4 +1,4 @@
-import useCurrentTab from "@/store/useCurrentTab";
+import useCurrentTab from "@/store/useCurrentTabStore";
 
 import { useRouter } from "next/navigation";
 import ChannelDiv from "./ChannelDiv";

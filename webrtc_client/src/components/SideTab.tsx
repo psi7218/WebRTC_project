@@ -4,18 +4,19 @@ import Image from "next/image";
 import { servers } from "@/dummydata/data";
 import { useState } from "react";
 import { Plus } from "lucide-react";
-import useCurrentTab from "@/store/useCurrentTab";
+import useCurrentTabStore from "@/store/useCurrentTabStore";
 import { ServerProps } from "@/types/type";
 import { useRouter } from "next/navigation";
+import icon from "../../public/assets/discord-mark-white.png";
 
-import Modal from "./Modal";
+import ServerModal from "./ServerModal";
 
 const SideTab = () => {
   const router = useRouter();
   const [serverList, setServerList] = useState(servers);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const { setCurrentServer } = useCurrentTab();
+  const { setCurrentServer } = useCurrentTabStore();
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
@@ -37,10 +38,18 @@ const SideTab = () => {
   return (
     <div className="min-h-screen">
       <div
-        className="min-h-[10%] min-w-full flex justify-center items-center h-20 "
+        className="min-h-[10%] min-w-full flex justify-center items-center h-16 bg-blue-500 rounded-3xl"
+        style={{ transform: "scale(0.8)" }}
         onClick={() => gotoDMTab()}
       >
-        <p className="text-white">ICON</p>
+        <Image
+          src={icon}
+          alt="icon"
+          className="w-12 h-9 object-cover rounded-full overflow-hidden"
+          width={8}
+          height={8}
+          unoptimized
+        />
       </div>
 
       <div className="min-h-[90%] flex flex-col gap-2 mt-4 justify-center items-center">
@@ -72,21 +81,10 @@ const SideTab = () => {
         >
           <Plus size={24} color="green" />
         </div>
-        <Modal isOpen={isModalOpen}>
-          <div className="fixed inset-0 z-50 flex items-center justify-center">
-            {/* 배경 오버레이 */}
-            <div
-              className="absolute inset-0 bg-black/60"
-              onClick={closeModal}
-            />
-            {/* 모달 내용 */}
-            <div className="relative z-50 bg-[#363940] rounded-md p-6 w-[480px] text-white">
-              <h2 className="text-xl font-bold mb-4">서버 만들기</h2>
-              <p className="text-gray-400">나만의 서버를 만들어보세요</p>
-              {/* 여기에 서버 생성 폼 추가 */}
-            </div>
-          </div>
-        </Modal>
+        <ServerModal isOpen={isModalOpen} onClose={closeModal}>
+          <h2 className="text-xl font-bold mb-4">서버 만들기</h2>
+          <p className="text-gray-400">나만의 서버를 만들어보세요</p>
+        </ServerModal>
       </div>
     </div>
   );
