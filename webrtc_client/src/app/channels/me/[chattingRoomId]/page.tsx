@@ -1,7 +1,9 @@
 "use client";
 import useWebSocket from "@/hooks/useWebSocket";
+import { useParams } from "next/navigation";
 
 const DirectMessagePage = () => {
+  const channelId = useParams();
   const { messages, sendMessage } = useWebSocket(1);
 
   const handleSendMessage = () => {
