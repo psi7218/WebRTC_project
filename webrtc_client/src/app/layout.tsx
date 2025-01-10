@@ -6,6 +6,7 @@ import "@/styles/globals.css";
 
 import SideTab from "@/components/SideTab";
 import SubContainer from "@/components/SubContainer";
+import Header from "@/components/Headers";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,27 +34,13 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <div className="flex min-h-screen">
-          {/* 사이드탭 */}
           <aside className="w-[5%] bg-[#202225] min-h-screen">
             <SideTab />
           </aside>
 
-          {/* 나머지 콘텐츠 */}
           <div className="w-[95%] flex flex-col">
-            {/* 상단 5% 공간 */}
-            <header className="h-[5%] bg-[#202225] flex items-center justify-between px-4 text-white">
-              <h1 className="text-lg font-bold">Discord Clone</h1>
-              <div>
-                <button className="bg-blue-500 px-4 py-2 rounded mr-2">
-                  로그인
-                </button>
-                <button className="bg-green-500 px-4 py-2 rounded">
-                  회원가입
-                </button>
-              </div>
-            </header>
+            <Header />
 
-            {/* 메인 콘텐츠 (남은 95%) */}
             <main className="h-[95%] bg-[#303136] rounded-tl-2xl flex">
               <div className="w-[20%] min-h-full">
                 <SubContainer />

@@ -9,7 +9,7 @@ import { ServerProps } from "@/types/type";
 import { useRouter } from "next/navigation";
 import icon from "../../public/assets/discord-mark-white.png";
 
-import ServerModal from "./ServerModal";
+import ServerModal from "./modal/ServerModal";
 
 const SideTab = () => {
   const router = useRouter();
