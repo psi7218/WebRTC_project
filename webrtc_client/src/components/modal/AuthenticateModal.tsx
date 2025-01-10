@@ -5,7 +5,11 @@ interface AuthenticateModalProps {
   onClose: () => void;
   children: React.ReactNode;
 }
-const AuthenticateModal = ({ isOpen, onClose, children }) => {
+const AuthenticateModal = ({
+  isOpen,
+  onClose,
+  children,
+}: AuthenticateModalProps) => {
   if (typeof window === "undefined") return null;
   if (!isOpen) return null;
 

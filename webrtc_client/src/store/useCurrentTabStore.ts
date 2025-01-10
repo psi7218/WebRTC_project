@@ -17,6 +17,12 @@ const useCurrentTabStore = create<useCurrentTabStoreState>()(
     {
       name: "currentTab",
       version: 1, // 버전이 무얼 의미하는지? todo:
+      partialize: (state) =>
+        Object.fromEntries(
+          Object.entries(state).filter(
+            ([key]) => key !== "accessToken" && !key.startsWith("set")
+          )
+        ),
     }
   )
 );
