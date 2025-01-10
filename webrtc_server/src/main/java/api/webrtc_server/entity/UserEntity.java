@@ -2,6 +2,9 @@ package api.webrtc_server.entity;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "user_entity")
 public class UserEntity {
@@ -12,7 +15,18 @@ public class UserEntity {
 
     private String username;
     private String email;
-    private String profileImage;
+
+    @Column(nullable = false)
+    private String password;
+    private String profileImage = "";
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_friends",
+            joinColumns = @JoinColumn(name = "user_id"),   // 본인의 컬럼
+            inverseJoinColumns = @JoinColumn(name = "friend_id") // 친구 컬럼
+    )
+    private List<UserEntity> friends = new ArrayList<>();
 
     // Getter and Setter
     public Long getUserId() {
@@ -39,11 +53,34 @@ public class UserEntity {
         this.email = email;
     }
 
+    public String getPassword() {
+        return password;
+    }
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public String getProfileImage() {
         return profileImage;
     }
 
     public void setProfileImage(String profileImage) {
-        this.profileImage = profileImage;
+        this.profileImage = (profileImage == null) ? "" : profileImage;
+    }
+
+    public List<UserEntity> getFriends() {
+        return friends;
+    }
+    public void setFriends(List<UserEntity> friends) {
+        this.friends = friends;
+    }
+
+    // 친구 추가 편의 메서드
+    public void addFriend(UserEntity friend) {
+        // 이미 friends 목록에 없는 경우만 추가
+        if (!this.friends.contains(friend)) {
+            this.friends.add(friend);
+            friend.getFriends().add(this); // 양방향
+        }
     }
 }
