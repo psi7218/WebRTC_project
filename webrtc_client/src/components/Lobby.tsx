@@ -16,8 +16,6 @@ const Lobby = () => {
     router.push(`/channels/me/${friendId}`);
   };
 
-  const { data } = useUsers();
-  console.log(data);
   return (
     <>
       <input
