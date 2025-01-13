@@ -1,4 +1,5 @@
 // 전역 레이아웃 관련 파일
+import Providers from "./providers";
 
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
@@ -33,24 +34,28 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <div className="flex min-h-screen">
-          <aside className="w-[5%] bg-[#202225] min-h-screen">
-            <SideTab />
-          </aside>
+        <Providers>
+          <div className="flex min-h-screen">
+            <aside className="w-[5%] bg-[#202225] min-h-screen">
+              <SideTab />
+            </aside>
 
-          <div className="w-[95%] flex flex-col">
-            <Header />
+            <div className="w-[95%] flex flex-col">
+              <Header />
 
-            <main className="h-[95%] bg-[#303136] rounded-tl-2xl flex">
-              <div className="w-[20%] min-h-full">
-                <SubContainer />
-              </div>
-              <div className="bg-[#363940] w-[80%] min-h-full">{children}</div>
-            </main>
+              <main className="h-[95%] bg-[#303136] rounded-tl-2xl flex">
+                <div className="w-[20%] min-h-full">
+                  <SubContainer />
+                </div>
+                <div className="bg-[#363940] w-[80%] min-h-full">
+                  {children}
+                </div>
+              </main>
+            </div>
           </div>
-        </div>
-        <div id="Authenticate-root"></div>
-        <div id="modal-root"></div>
+          <div id="Authenticate-root"></div>
+          <div id="modal-root"></div>
+        </Providers>
       </body>
     </html>
   );

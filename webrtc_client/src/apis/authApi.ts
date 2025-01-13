@@ -1,4 +1,4 @@
-import axiosInstance from "./axiosInstance";
+import axiosInstance from "./instance/axiosInstance";
 
 interface loginProps {
   email: string;

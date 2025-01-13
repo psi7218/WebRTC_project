@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@stomp/stompjs": "^7.0.0",
+    "@tanstack/react-query": "^5.64.0",
+    "@tanstack/react-query-devtools": "^5.64.0",
     "axios": "^1.7.9",
     "lucide-react": "^0.469.0",
     "next": "15.1.3",

@@ -6,6 +6,7 @@ import { friends } from "@/dummydata/data";
 import { Plus, BellRing } from "lucide-react";
 import PersonalThumbnail from "./ui/PersonalThumbnail";
 import { useRouter } from "next/navigation";
+import { useUsers } from "@/hooks/queries/users/useUsers";
 
 const Lobby = () => {
   const [friendList, setFriendList] = useState(friends);
@@ -14,6 +15,9 @@ const Lobby = () => {
   const gotoDMDialog = (friendId: number) => {
     router.push(`/channels/me/${friendId}`);
   };
+
+  const { data } = useUsers();
+  console.log(data);
   return (
     <>
       <input

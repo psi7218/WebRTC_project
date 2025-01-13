@@ -1,5 +1,5 @@
 "use client";
-import useWebSocket from "@/hooks/useWebSocket";
+import useWebSocket from "@/hooks/custom/useWebSocket";
 import { useParams } from "next/navigation";
 import { useUserStore } from "@/store/useUserStore";
 
