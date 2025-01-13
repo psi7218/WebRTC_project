@@ -30,6 +30,14 @@ public class UserController {
                 .map(this::entityToDTO)
                 .collect(Collectors.toList());
     }
+    @GetMapping("/search")
+    public List<UserDTO> searchUsers(@RequestParam String keyword) {
+        List<UserEntity> users = userRepository.findByUsernameContainingIgnoreCase(keyword);
+        return users.stream()
+                .map(this::entityToDTO)
+                .collect(Collectors.toList());
+    }
+
     @PostMapping("/{userId}/friends/{friendId}")
     public UserDTO addFriend(@PathVariable Long userId, @PathVariable Long friendId) {
         UserEntity user = userRepository.findById(userId)
