@@ -19,10 +19,13 @@ interface useUserStoreProps {
 
   friendIds: number[];
   setFriendIds: (friendIds: number[]) => void;
+
+  logout: () => void;
+  resetPersistStorage?: () => void;
 }
 export const useUserStore = create<useUserStoreProps>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       userId: -1,
       setUserId: (userId) => set({ userId }),
 
@@ -40,6 +43,22 @@ export const useUserStore = create<useUserStoreProps>()(
 
       friendIds: [],
       setFriendIds: (friendIds) => set({ friendIds }),
+
+      logout: () => {
+        // 1) Zustand state 초기화
+        set({
+          userId: -1,
+          username: "",
+          email: "",
+          password: "",
+          profileImage: "",
+          friendIds: [],
+        });
+        // 2) persist 스토리지 제거
+        // zustand 버전에 따라 이름이 조금 다를 수 있음
+        get().resetPersistStorage?.();
+        // or useUserStore.persist.clearStorage();
+      },
     }),
     {
       name: "userInfo",

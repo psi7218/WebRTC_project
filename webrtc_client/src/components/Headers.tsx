@@ -7,6 +7,10 @@ import { useUserStore } from "@/store/useUserStore";
 
 const Header = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const [typedEmail, setTypedEmail] = useState("");
+  const [typedPassword, setTypedPassword] = useState("");
+
   const {
     userId,
     username,
@@ -16,14 +20,13 @@ const Header = () => {
     setPassword,
     setProfileImage,
     setUsername,
+    logout,
   } = useUserStore();
-  const email = "test@gmail";
-  const password = "1234";
 
   const handlelogin = async () => {
     const response = await login({
-      email,
-      password,
+      email: typedEmail,
+      password: String(typedPassword),
     });
 
     setUserId(response["userId"]);
@@ -34,12 +37,27 @@ const Header = () => {
     setUsername(response["username"]);
     setIsModalOpen(false);
   };
+
+  const handleTypedEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTypedEmail(e.target.value);
+  };
+
+  const handleTypedPassword = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTypedPassword(e.target.value);
+  };
+
+  const handleLogOut = () => {
+    logout();
+  };
   return (
     <header className="h-[5%] bg-[#202225] flex items-center justify-between px-4 text-white">
       <h1 className="text-lg font-bold">Discord Clone</h1>
       <div>
-        {userId ? (
-          <div>{username}</div>
+        {userId !== -1 ? (
+          <div className="flex gap-3">
+            <div>{username}</div>
+            <button onClick={handleLogOut}>logout</button>
+          </div>
         ) : (
           <button
             className="px-4 py-2 rounded mr-2"
@@ -54,11 +72,19 @@ const Header = () => {
         onClose={() => setIsModalOpen(false)}
       >
         <div className="flex flex-col gap-4">
-          <input type="text" placeholder="Email" className="p-2 rounded" />
+          <input
+            type="text"
+            placeholder="Email"
+            className="p-2 rounded text-black"
+            value={typedEmail}
+            onChange={handleTypedEmail}
+          />
           <input
             type="password"
             placeholder="Password"
-            className="p-2 rounded"
+            className="p-2 rounded text-black"
+            value={typedPassword}
+            onChange={handleTypedPassword}
           />
           <div className="flex items-center">
             <button>SIGNUP</button>
