@@ -6,7 +6,6 @@ import { friends } from "@/dummydata/data";
 import { Plus, BellRing } from "lucide-react";
 import PersonalThumbnail from "./ui/PersonalThumbnail";
 import { useRouter } from "next/navigation";
-import { useUsers } from "@/hooks/queries/users/useUsers";
 
 const Lobby = () => {
   const [friendList, setFriendList] = useState(friends);
@@ -43,8 +42,8 @@ const Lobby = () => {
         <BellRing className="w-5 h-5" />
         <span className="text-sm">친구</span>
       </div>
-      <div className="mt-6 flex justify-between">
-        <p className="text-white ">다이렉트 메세지</p>
+      <div className="mt-6 flex justify-between py-3">
+        <p className="text-gray-400 text-xs font-bol pl-2">다이렉트 메세지</p>
         <Plus className="text-white w-5 h-5" />
       </div>
 

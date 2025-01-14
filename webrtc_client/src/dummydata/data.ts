@@ -52,7 +52,7 @@ export const servers: ServerProps[] = [
 
 export const friends: Friend[] = [
   {
-    id: 1,
+    id: 20,
     name: "friend1",
     thumbnail: "https://ifh.cc/g/bXNGqc.png",
     status: "online",
