@@ -2,14 +2,16 @@
 
 import AuthenticateModal from "./modal/AuthenticateModal";
 import { useState } from "react";
-import { login } from "@/apis/authApi";
+import { login } from "@/apis/auth/authApi";
 import { useUserStore } from "@/store/useUserStore";
+import SignUpModal from "./modal/SignUpModal";
+import { Sign } from "crypto";
 
 const Header = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const [typedEmail, setTypedEmail] = useState("");
-  const [typedPassword, setTypedPassword] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [isSignUpModalOpen, setIsSignUpModalOpen] = useState<boolean>(false);
+  const [typedEmail, setTypedEmail] = useState<string>("");
+  const [typedPassword, setTypedPassword] = useState<string>("");
 
   const {
     userId,
@@ -59,12 +61,15 @@ const Header = () => {
             <button onClick={handleLogOut}>logout</button>
           </div>
         ) : (
-          <button
-            className="px-4 py-2 rounded mr-2"
-            onClick={() => setIsModalOpen(true)}
-          >
-            LOGIN
-          </button>
+          <div>
+            <button onClick={() => setIsSignUpModalOpen(true)}>SignUp</button>
+            <button
+              className="px-4 py-2 rounded mr-2"
+              onClick={() => setIsModalOpen(true)}
+            >
+              LOGIN
+            </button>
+          </div>
         )}
       </div>
       <AuthenticateModal
@@ -87,13 +92,16 @@ const Header = () => {
             onChange={handleTypedPassword}
           />
           <div className="flex items-center">
-            <button>SIGNUP</button>
             <button className="px-4 py-2 rounded" onClick={handlelogin}>
               LOGIN
             </button>
           </div>
         </div>
       </AuthenticateModal>
+      <SignUpModal
+        isOpen={isSignUpModalOpen}
+        onClose={() => setIsSignUpModalOpen(false)}
+      />
     </header>
   );
 };

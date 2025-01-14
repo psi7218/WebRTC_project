@@ -1,5 +1,5 @@
 import axiosInstance from "../instance/axiosInstance";
-import { Users, loginProps } from "./types";
+import { loginProps } from "./types";
 
 export const login = async (loginProps: loginProps) => {
   try {
@@ -24,6 +24,15 @@ export const searchUsers = async (keyword: string) => {
     const response = await axiosInstance.get(`/users/search`, {
       params: { keyword },
     });
+    return response.data;
+  } catch (e) {
+    throw e;
+  }
+};
+
+export const getUserById = async (userId: number) => {
+  try {
+    const response = await axiosInstance.get(`/users/${userId}`);
     return response.data;
   } catch (e) {
     throw e;

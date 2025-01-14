@@ -55,6 +55,7 @@ export default function RootLayout({
           </div>
           <div id="Authenticate-root"></div>
           <div id="modal-root"></div>
+          <div id="SignUp-root"></div>
         </Providers>
       </body>
     </html>

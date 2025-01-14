@@ -1,10 +1,13 @@
 import { friends } from "@/dummydata/data";
 import Image from "next/image";
 import icon from "../../../public/assets/discord-mark-white.png";
-import { useState } from "react";
+// import { useState } from "react";
 
-const FriendFilteredTab = ({ selectedCategory }) => {
-  const [keyword, setKeyword] = useState("");
+interface FriendFilteredTabProps {
+  selectedCategory: string;
+}
+const FriendFilteredTab = ({ selectedCategory }: FriendFilteredTabProps) => {
+  // const [keyword, setKeyword] = useState("");
   const friendlist = friends;
   console.log(selectedCategory);
   return (

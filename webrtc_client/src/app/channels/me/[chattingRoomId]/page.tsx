@@ -1,28 +1,34 @@
 "use client";
 import useWebSocket from "@/hooks/custom/useWebSocket";
-import { useParams } from "next/navigation";
+import Image from "next/image";
 import { useUserStore } from "@/store/useUserStore";
+import { useState } from "react";
+import { useParams } from "next/navigation";
+import { useUser } from "@/hooks/queries/users/useUser";
+import DmHeaders from "@/components/dm/DmHeaders";
+import PersonalThumbnail from "@/components/ui/PersonalThumbnail";
 
 const DirectMessagePage = () => {
-  const channelId = useParams();
-  console.log(channelId);
+  const params = useParams();
+  const friendId = params["chattingRoomId"];
+
   const { messages, sendMessage } = useWebSocket(1);
+  const { data } = useUser(Number(friendId));
+  console.log(data);
   const { userId } = useUserStore();
-  console.log(userId);
+  const [currentContent, setCurrentContent] = useState<string>(""); // 채팅내용(todo: 첨부파일을 추가할 수 도 있음)
+
   const handleSendMessage = () => {
     sendMessage({
-      userId: 1,
-      content: "Hello, World!",
+      userId: userId,
+      content: currentContent,
     });
   };
   return (
     <div>
-      <h1 onClick={handleSendMessage}>채팅방</h1>
-      <ul>
-        {messages.map((msg, index) => (
-          <li key={index}>{msg.content}</li>
-        ))}
-      </ul>
+      <DmHeaders />
+      <hr className="border-1 border-black border-opacity-20 w-full" />
+      {/* <PersonalThumbnail logo_color={"black"} thumbnail={data?.profileImage} /> */}
     </div>
   );
 };
