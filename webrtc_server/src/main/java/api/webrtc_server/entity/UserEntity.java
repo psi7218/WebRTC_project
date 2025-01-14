@@ -20,6 +20,9 @@ public class UserEntity {
     private String password;
     private String profileImage = "";
 
+    @Column(nullable = false)
+    private String thumbnailColor = "#5865F2";
+
     @ManyToMany
     @JoinTable(
             name = "user_friends",
@@ -66,6 +69,14 @@ public class UserEntity {
 
     public void setProfileImage(String profileImage) {
         this.profileImage = (profileImage == null) ? "" : profileImage;
+    }
+
+    public String getThumbnailColor() {
+        return thumbnailColor;
+    }
+
+    public void setThumbnailColor(String thumbnailColor) {
+        this.thumbnailColor = thumbnailColor;
     }
 
     public List<UserEntity> getFriends() {

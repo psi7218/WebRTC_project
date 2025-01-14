@@ -8,7 +8,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -36,6 +38,21 @@ public class UserController {
         return users.stream()
                 .map(this::entityToDTO)
                 .collect(Collectors.toList());
+    }
+
+    @GetMapping("/check-email")
+    public ResponseEntity<Map<String, Boolean>> checkEmailAvailability(@RequestParam String email) {
+        UserEntity user = userRepository.findByEmail(email);
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("available", user == null);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{userId}")
+    public UserDTO getUserById(@PathVariable Long userId) {
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        return entityToDTO(user);
     }
 
     @PostMapping("/{userId}/friends/{friendId}")
@@ -104,10 +121,10 @@ public class UserController {
         UserDTO dto = new UserDTO();
         dto.setUserId(entity.getUserId());
         dto.setUsername(entity.getUsername());
-        dto.setPassword(entity.getPassword());
+//        dto.setPassword(entity.getPassword());
         dto.setEmail(entity.getEmail());
         dto.setProfileImage(entity.getProfileImage());
-
+        dto.setThumbnailColor(entity.getThumbnailColor());
         // friends -> friendIds
         List<Long> friendIds = entity.getFriends().stream()
                 .map(UserEntity::getUserId)
@@ -125,6 +142,7 @@ public class UserController {
         entity.setPassword(dto.getPassword());
         entity.setEmail(dto.getEmail());
         entity.setProfileImage(dto.getProfileImage());
+        entity.setThumbnailColor(dto.getThumbnailColor());
         // friends는 여기서 바로 세팅하지 않고 addFriend 로 관리
         return entity;
     }
