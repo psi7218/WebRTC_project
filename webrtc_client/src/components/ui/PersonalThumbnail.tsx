@@ -1,6 +1,5 @@
 import Image from "next/image";
 
-import { bgcolors } from "@/dummydata/data";
 import white_logo from "../../../public/assets/discord-mark-white.png";
 import { BgColorType } from "@/types/type";
 
@@ -15,14 +14,15 @@ const PersonalThumbnail: React.FC<PersonalThumbnailProps> = ({
 }) => {
   return (
     <div
-      className={`${bgcolors[logo_color]} rounded-full w-9 h-9 flex justify-center items-center overflow-hidden`}
+      style={{ backgroundColor: logo_color }}
+      className={`rounded-full w-9 h-9 flex justify-center items-center overflow-hidden`}
     >
       {thumbnail && thumbnail.length > 0 ? (
         <Image
           src={thumbnail}
           alt="프로필 이미지"
-          width={36}
-          height={36}
+          width={24}
+          height={24}
           className="object-cover w-full h-full"
         />
       ) : (

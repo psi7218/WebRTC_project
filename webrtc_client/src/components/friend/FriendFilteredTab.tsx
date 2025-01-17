@@ -8,10 +8,9 @@ interface FriendFilteredTabProps {
 const FriendFilteredTab = ({ selectedCategory }: FriendFilteredTabProps) => {
   const friendIds = useUserStore((state) => state.friendIds);
   const friendQueries = useGetFriends(friendIds);
-  console.log(friendIds);
+
   const friendList = friendQueries.map((query) => query.data).filter(Boolean); // data가 undefined가 아닌 것만 필터링
-  console.log(friendList);
-  console.log(selectedCategory);
+
   return (
     <div className="w-[60%] h-full border-r border-1 border-gray-600 px-8 pt-2">
       <input

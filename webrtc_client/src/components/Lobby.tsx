@@ -13,13 +13,13 @@ const Lobby = () => {
   const [friendList, setFriendList] = useState(friends);
   const router = useRouter();
   const { participatingChannelIds, userId, password } = useUserStore();
-
+  console.log(participatingChannelIds);
   const channelQueries = useChannels(participatingChannelIds);
 
   const channelDataList = channelQueries
     .map((query) => query.data)
     .filter(Boolean); // data가 undefined가 아닌 것만 필터링
-
+  console.log(channelDataList);
   const gotoDMDialog = (friendId: number) => {
     router.push(`/channels/me/${friendId}`);
   };

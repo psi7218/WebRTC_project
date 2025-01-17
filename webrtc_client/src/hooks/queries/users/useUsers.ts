@@ -20,7 +20,6 @@ export const useSearchUsers = (keyword: string) => {
 };
 
 export const useGetFriends = (friendIds: number[]) => {
-  console.log(friendIds);
   const results = useQueries({
     queries: friendIds.map((friendId) => {
       return {
