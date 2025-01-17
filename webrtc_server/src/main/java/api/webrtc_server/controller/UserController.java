@@ -55,6 +55,8 @@ public class UserController {
         return entityToDTO(user);
     }
 
+
+    // 친구 추가
     @PostMapping("/{userId}/friends/{friendId}")
     public UserDTO addFriend(@PathVariable Long userId, @PathVariable Long friendId) {
         UserEntity user = userRepository.findById(userId)
@@ -130,7 +132,7 @@ public class UserController {
                 .map(UserEntity::getUserId)
                 .collect(Collectors.toList());
         dto.setFriendIds(friendIds);
-
+        dto.setParticipatingChannelIds(entity.getParticipatingChannelIds());
         return dto;
     }
     private UserEntity dtoToEntity(UserDTO dto) {
@@ -143,6 +145,7 @@ public class UserController {
         entity.setEmail(dto.getEmail());
         entity.setProfileImage(dto.getProfileImage());
         entity.setThumbnailColor(dto.getThumbnailColor());
+        entity.setParticipatingChannelIds(dto.getParticipatingChannelIds());
         // friends는 여기서 바로 세팅하지 않고 addFriend 로 관리
         return entity;
     }

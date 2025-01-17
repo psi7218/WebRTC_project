@@ -31,7 +31,24 @@ public class UserEntity {
     )
     private List<UserEntity> friends = new ArrayList<>();
 
+    @ElementCollection
+    @CollectionTable(
+            name = "user_participating_channels",
+            joinColumns = @JoinColumn(name = "user_id")
+    )
+    @Column(name = "channel_id")
+    private List<Long> participatingChannelIds = new ArrayList<>();
+
     // Getter and Setter
+
+    public List<Long> getParticipatingChannelIds() {
+        return participatingChannelIds;
+    }
+
+    public void setParticipatingChannelIds(List<Long> participatingChannelIds) {
+        this.participatingChannelIds = participatingChannelIds;
+    }
+
     public Long getUserId() {
         return userId;
     }

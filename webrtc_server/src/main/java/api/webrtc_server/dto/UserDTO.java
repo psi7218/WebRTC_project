@@ -17,7 +17,17 @@ public class UserDTO {
     private String thumbnailColor = "#5865F2";
     private List<Long> friendIds; // 실제로는 friend 전체 정보를 담을 수도 있음
 
+    private List<Long> participatingChannelIds;
+
+    public List<Long> getParticipatingChannelIds() {
+        return participatingChannelIds;
+    }
     // --- Getter & Setter ---
+
+    public void setParticipatingChannelIds(List<Long> participatingChannelIds) {
+        this.participatingChannelIds = participatingChannelIds;
+    }
+
     public Long getUserId() {
         return userId;
     }
