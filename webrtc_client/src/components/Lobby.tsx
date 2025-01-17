@@ -6,10 +6,19 @@ import { friends } from "@/dummydata/data";
 import { Plus, BellRing } from "lucide-react";
 import PersonalThumbnail from "./ui/PersonalThumbnail";
 import { useRouter } from "next/navigation";
+import { useUserStore } from "@/store/useUserStore";
+import { useChannels } from "@/hooks/queries/channels/useChannels";
 
 const Lobby = () => {
   const [friendList, setFriendList] = useState(friends);
   const router = useRouter();
+  const { participatingChannelIds, userId, password } = useUserStore();
+
+  const channelQueries = useChannels(participatingChannelIds);
+
+  const channelDataList = channelQueries
+    .map((query) => query.data)
+    .filter(Boolean); // data가 undefined가 아닌 것만 필터링
 
   const gotoDMDialog = (friendId: number) => {
     router.push(`/channels/me/${friendId}`);
@@ -47,19 +56,20 @@ const Lobby = () => {
         <Plus className="text-white w-5 h-5" />
       </div>
 
+      {/* todo: frienList가 아니라 dm리스트로 바꿔야 할듯? */}
       <div className="space-y-1">
-        {friendList.map((friend) => (
+        {channelDataList.map((channel) => (
           <div
-            key={friend.id}
+            key={channel.channelId}
             className="flex justify-start mg-3 gap-2.5 p-1"
-            onClick={() => gotoDMDialog(friend.id)}
+            onClick={() => gotoDMDialog(channel.channelId)}
           >
             <PersonalThumbnail
-              logo_color={friend.logo_color}
-              thumbnail={friend.thumbnail}
+              logo_color={channel.logo_color}
+              thumbnail={channel.thumbnail}
             />
             <span className="flex justify-center items-center">
-              <p className="text-[#8E9BA4]">{friend.name}</p>
+              <p className="text-[#8E9BA4]">{channel.channelName}</p>
             </span>
           </div>
         ))}

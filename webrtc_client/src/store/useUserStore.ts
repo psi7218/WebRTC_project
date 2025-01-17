@@ -14,11 +14,14 @@ interface useUserStoreProps {
   password: string;
   setPassword: (pasword: string) => void;
 
-  profileImage: string;
-  setProfileImage: (profileImage: string) => void;
+  thumbnailColor: string;
+  setThumbnailColor: (thumbnailColor: string) => void;
 
   friendIds: number[];
   setFriendIds: (friendIds: number[]) => void;
+
+  participatingChannelIds: number[];
+  setParticipatingChannelIds: (participatingChannelIds: number[]) => void;
 
   logout: () => void;
   resetPersistStorage?: () => void;
@@ -38,8 +41,12 @@ export const useUserStore = create<useUserStoreProps>()(
       password: "",
       setPassword: (password) => set({ password }),
 
-      profileImage: "",
-      setProfileImage: (profileImage) => ({ profileImage }),
+      thumbnailColor: "",
+      setThumbnailColor: (thumbnailColor) => set({ thumbnailColor }),
+
+      participatingChannelIds: [],
+      setParticipatingChannelIds: (participatingChannelIds) =>
+        set({ participatingChannelIds }),
 
       friendIds: [],
       setFriendIds: (friendIds) => set({ friendIds }),
@@ -51,8 +58,9 @@ export const useUserStore = create<useUserStoreProps>()(
           username: "",
           email: "",
           password: "",
-          profileImage: "",
+          thumbnailColor: "",
           friendIds: [],
+          participatingChannelIds: [],
         });
         // 2) persist 스토리지 제거
         // zustand 버전에 따라 이름이 조금 다를 수 있음
@@ -63,12 +71,11 @@ export const useUserStore = create<useUserStoreProps>()(
     {
       name: "userInfo",
       version: 1,
-      partialize: (state) =>
-        Object.fromEntries(
-          Object.entries(state).filter(
-            ([key]) => key !== "accessToken" && !key.startsWith("set")
-          )
-        ),
+      partialize: (state) => ({
+        ...state,
+        resetPersistStorage: undefined, // 함수는 제외
+        logout: undefined, // 함수는 제외
+      }),
     }
   )
 );

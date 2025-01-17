@@ -1,6 +1,6 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQueries, useQuery } from "@tanstack/react-query";
 import { userKeys } from "@/apis/users/userKeys";
-import { getAllUsers, searchUsers } from "@/apis/users/userApi";
+import { getAllUsers, searchUsers, getUserById } from "@/apis/users/userApi";
 
 export const useUsers = () => {
   return useQuery({
@@ -17,4 +17,19 @@ export const useSearchUsers = (keyword: string) => {
     enabled: keyword.length >= 2, // 2글자 이상일 때만 검색
     staleTime: 0, // 검색은 항상 최신 데이터 필요
   });
+};
+
+export const useGetFriends = (friendIds: number[]) => {
+  console.log(friendIds);
+  const results = useQueries({
+    queries: friendIds.map((friendId) => {
+      return {
+        queryKey: userKeys.detail(friendId),
+        queryFn: () => getUserById(friendId),
+        enabled: !!friendId,
+        staletime: 5 * 60 * 1000,
+      };
+    }),
+  });
+  return results;
 };

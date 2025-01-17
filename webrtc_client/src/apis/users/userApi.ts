@@ -38,3 +38,14 @@ export const getUserById = async (userId: number) => {
     throw e;
   }
 };
+
+export const addFriend = async (userId: number, friendId: number) => {
+  try {
+    const response = await axiosInstance.post(
+      `api/users/${userId}/friends/${friendId}`
+    );
+    return response.data;
+  } catch (e) {
+    throw e;
+  }
+};

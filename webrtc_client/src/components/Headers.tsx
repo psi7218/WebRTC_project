@@ -5,7 +5,6 @@ import { useState } from "react";
 import { login } from "@/apis/auth/authApi";
 import { useUserStore } from "@/store/useUserStore";
 import SignUpModal from "./modal/SignUpModal";
-import { Sign } from "crypto";
 
 const Header = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -20,7 +19,8 @@ const Header = () => {
     setEmail,
     setFriendIds,
     setPassword,
-    setProfileImage,
+    setThumbnailColor,
+    setParticipatingChannelIds,
     setUsername,
     logout,
   } = useUserStore();
@@ -30,12 +30,13 @@ const Header = () => {
       email: typedEmail,
       password: String(typedPassword),
     });
-
+    console.log(response);
     setUserId(response["userId"]);
     setEmail(response["email"]);
     setFriendIds(response["friendIds"]);
     setPassword(response["password"]);
-    setProfileImage(response["profileImage"]);
+    setThumbnailColor(response["thumbnailColor"]);
+    setParticipatingChannelIds(response["participatingChannelIds"]);
     setUsername(response["username"]);
     setIsModalOpen(false);
   };

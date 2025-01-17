@@ -14,7 +14,7 @@ const DirectMessagePage = () => {
 
   const { messages, sendMessage } = useWebSocket(1);
   const { data } = useUser(Number(friendId));
-  console.log(data);
+
   const { userId } = useUserStore();
   const [currentContent, setCurrentContent] = useState<string>(""); // 채팅내용(todo: 첨부파일을 추가할 수 도 있음)
 
