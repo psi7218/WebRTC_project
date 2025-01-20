@@ -18,7 +18,7 @@ const SubContainer = () => {
         {currentServer ? <ChannelContainer /> : <Lobby />}
       </div>
       <div className="h-[10%] flex flex-col">
-        {userId && (
+        {userId !== -1 && (
           <div className="bg-[#232428] h-full flex items-center pl-2">
             <PersonalThumbnail logo_color={logo_color} thumbnail="" />
             <div className="pl-2">

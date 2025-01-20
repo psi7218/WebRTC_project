@@ -3,9 +3,13 @@ import ChatInput from "./ChatInput";
 import ChattingUpperDiv from "./ChattingUpperDiv";
 import MessageList from "./MessageList";
 import { useState, useEffect, useRef } from "react";
+import { useWebSocketStore } from "@/store/useWebsocketStore";
 
 const ChattingMainDiv = ({ participantsData }) => {
-  const { userId } = useUserStore((state) => state.userId);
+  const channelId = useWebSocketStore((state) => state.channelId);
+  const storeState = useWebSocketStore();
+  console.log("WebSocket Store State:", storeState);
+
   const [messages, setMessages] = useState([]);
   const messageEndRef = useRef(null);
 
@@ -16,17 +20,6 @@ const ChattingMainDiv = ({ participantsData }) => {
     scrollToBottom();
   }, [messages]);
 
-  const handleSendMessage = (text) => {
-    if (!text.trim()) return;
-    const newMessage = {
-      id: Date.now(), // 임시 ID
-      userId,
-      content: text,
-      createdAt: new Date().toISOString(),
-    };
-    setMessages((prev) => [...prev, newMessage]);
-  };
-
   return (
     <div className="absolute inset-0 flex flex-col bg-[#313338] text-white">
       <div className="flex-1 min-h-0 overflow-y-auto">
@@ -34,8 +27,10 @@ const ChattingMainDiv = ({ participantsData }) => {
           <div className="space-y-8">
             <ChattingUpperDiv participantsData={participantsData} />
             <MessageList
-              messages={messages}
               participantsData={participantsData}
+              channelId={channelId}
+              messages={messages}
+              setMessages={setMessages}
             />
           </div>
           <div ref={messageEndRef} />
@@ -44,7 +39,7 @@ const ChattingMainDiv = ({ participantsData }) => {
 
       {/* 하단 고정 입력 영역 */}
       <div className="flex-none p-4 border-t border-gray-600">
-        <ChatInput onSend={handleSendMessage} />
+        <ChatInput />
       </div>
     </div>
   );

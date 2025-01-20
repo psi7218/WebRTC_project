@@ -1,8 +1,6 @@
 "use client";
+
 import useWebSocket from "@/hooks/custom/useWebSocket";
-import Image from "next/image";
-import { useUserStore } from "@/store/useUserStore";
-import { useState } from "react";
 import { useParams } from "next/navigation";
 
 import { useChannel } from "@/hooks/queries/channels/useChannel";
@@ -14,11 +12,13 @@ import ChattingMainDiv from "@/components/chatting/ChattingMainDiv";
 const DirectMessagePage = () => {
   const params = useParams();
   const chattingRoodId = params["chattingRoomId"];
-  const [currentContent, setCurrentContent] = useState<string>(""); // 채팅내용(todo: 첨부파일을 추가할 수 도 있음)
-  // const { messages, sendMessage } = useWebSocket(1);
+
+  useWebSocket(Number(chattingRoodId));
+
   const { data: channelData, isLoading: isLoadingChannel } = useChannel(
     Number(chattingRoodId)
   );
+
   const participantsQueries = useGetFriends(channelData?.participantIds || []);
   const isLoadingParticipants = participantsQueries.some((q) => q.isLoading);
   const participantsData = participantsQueries
@@ -29,12 +29,6 @@ const DirectMessagePage = () => {
     return <div>Loading...</div>;
   }
 
-  // const handleSendMessage = () => {
-  //   sendMessage({
-  //     userId: userId,
-  //     content: currentContent,
-  //   });
-  // };
   return (
     <div className="flex flex-col h-full">
       <DmHeaders participantsData={participantsData} />

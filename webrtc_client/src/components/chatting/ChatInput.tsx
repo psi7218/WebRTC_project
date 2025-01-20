@@ -1,10 +1,23 @@
+import { useUserStore } from "@/store/useUserStore";
+import { useWebSocketStore } from "@/store/useWebsocketStore";
 import React, { useState } from "react";
 
-const ChatInput = ({ onSend }) => {
+const ChatInput = () => {
   const [text, setText] = useState("");
+  const { stompClient, isConnected, channelId } = useWebSocketStore();
+  const userId = useUserStore((state) => state.userId);
 
   const handleSend = () => {
-    onSend?.(text);
+    if (!text.trim() || !isConnected) return;
+
+    stompClient.send(
+      `/app/channel/${channelId}/send`,
+      {},
+      JSON.stringify({
+        userId,
+        content: text,
+      })
+    );
     setText("");
   };
 
@@ -27,6 +40,7 @@ const ChatInput = ({ onSend }) => {
       />
       <button
         onClick={handleSend}
+        disabled={!isConnected}
         className="bg-blue-600 px-4 py-2 rounded-md text-white"
       >
         전송

@@ -1,10 +1,43 @@
 import React from "react";
 import dayjs from "dayjs";
+import { useWebSocketStore } from "@/store/useWebsocketStore";
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { getChannelMessages } from "@/apis/messages/messageApi";
 
-// participantsData: [ { userId, username, ... }, ... ]
-// messages: [ { id, userId, content, createdAt }, ... ]
-const MessageList = ({ messages, participantsData }) => {
-  // 메시지를 createdAt 오름차순 정렬 (이미 정렬돼 있다면 불필요)
+const MessageList = ({
+  channelId,
+  participantsData,
+  messages,
+  setMessages,
+}) => {
+  const { stompClient } = useWebSocketStore();
+
+  useEffect(() => {
+    if (!channelId || channelId === -1) return;
+    const fetchMessages = async () => {
+      const response = await getChannelMessages(channelId);
+      setMessages(response);
+    };
+    fetchMessages();
+  }, [channelId]);
+
+  useEffect(() => {
+    if (!stompClient) return;
+
+    const subscription = stompClient.subscribe(
+      `/topic/channel/${channelId}`,
+      (message) => {
+        const newMessage = JSON.parse(message.body);
+        setMessages((prev) => [...prev, newMessage]);
+      }
+    );
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [stompClient, channelId]);
+
   const sortedMessages = [...messages].sort(
     (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
   );
@@ -58,7 +91,7 @@ const MessageList = ({ messages, participantsData }) => {
           const isMe = user?.userId === 1; // 예시: 내 userId가 1이라고 가정
           return (
             <div
-              key={message.id}
+              key={message.messageId}
               className={`flex ${
                 isMe ? "justify-end" : "justify-start"
               } items-start gap-2`}

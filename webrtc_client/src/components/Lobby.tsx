@@ -1,8 +1,5 @@
 "use client";
 
-import { useState } from "react";
-import { friends } from "@/dummydata/data";
-
 import { Plus, BellRing } from "lucide-react";
 import PersonalThumbnail from "./ui/PersonalThumbnail";
 import { useRouter } from "next/navigation";
@@ -10,7 +7,6 @@ import { useUserStore } from "@/store/useUserStore";
 import { useChannels } from "@/hooks/queries/channels/useChannels";
 
 const Lobby = () => {
-  const [friendList, setFriendList] = useState(friends);
   const router = useRouter();
   const { participatingChannelIds, userId, password } = useUserStore();
 
@@ -20,8 +16,8 @@ const Lobby = () => {
     .map((query) => query.data)
     .filter(Boolean); // data가 undefined가 아닌 것만 필터링
 
-  const gotoDMDialog = (friendId: number) => {
-    router.push(`/channels/me/${friendId}`);
+  const gotoDMDialog = (channelId: number) => {
+    router.push(`/channels/me/${channelId}`);
   };
 
   return (
