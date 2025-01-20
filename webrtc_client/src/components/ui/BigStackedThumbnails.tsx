@@ -14,7 +14,7 @@ const BigStackedThumbnails = ({ participants }) => {
   };
 
   return (
-    <div className="relative w-40 h-40 " style={{ transform: "scale(0.7)" }}>
+    <div className="relative w-20 h-20" style={{ transform: "scale(0.8)" }}>
       {/* 각각의 썸네일을 absolute로 겹치기 */}
       {others.map((user, index) => {
         const { top, left } = getOffsets(index);

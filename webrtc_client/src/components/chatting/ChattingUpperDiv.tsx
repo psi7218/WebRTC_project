@@ -10,9 +10,15 @@ const ChattingUpperDiv = ({ participantsData }) => {
   const nicknameString = others.map((p) => p.username).join(", ");
 
   return (
-    <div>
-      <BigStackedThumbnails participants={participantsData} />
-      <p className="px-8 font-bold text-white text-4xl">{nicknameString}</p>
+    <div className="">
+      <div className="pb-10">
+        <BigStackedThumbnails participants={participantsData} />
+      </div>
+
+      <div className="">
+        <p className="font-bold text-white text-4xl">{nicknameString}</p>
+        <span>#{nicknameString} 그룹에 오신걸 환영합니다.</span>
+      </div>
     </div>
   );
 };

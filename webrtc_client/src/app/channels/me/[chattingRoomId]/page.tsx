@@ -36,10 +36,12 @@ const DirectMessagePage = () => {
   //   });
   // };
   return (
-    <div>
+    <div className="flex flex-col h-full">
       <DmHeaders participantsData={participantsData} />
       <hr className="border-1 border-black border-opacity-20 w-full" />
-      <ChattingMainDiv participantsData={participantsData} />
+      <div className="flex-1 relative">
+        <ChattingMainDiv participantsData={participantsData} />
+      </div>
     </div>
   );
 };

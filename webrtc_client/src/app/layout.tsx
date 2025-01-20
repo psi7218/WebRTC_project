@@ -30,26 +30,24 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="h-screen overflow-hidden">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Providers>
-          <div className="flex min-h-screen">
-            <aside className="w-[5%] bg-[#202225] min-h-screen">
+          <div className="flex h-full">
+            <aside className="w-[5%] bg-[#202225] h-screen">
               <SideTab />
             </aside>
 
-            <div className="w-[95%] flex flex-col">
+            <div className="w-[95%] flex flex-col ">
               <Header />
 
-              <main className="h-[95%] bg-[#303136] rounded-tl-2xl flex">
-                <div className="w-[20%] min-h-full">
+              <main className="h-[95%] bg-[#303136] rounded-tl-2xl flex ">
+                <div className="w-[20%]">
                   <SubContainer />
                 </div>
-                <div className="bg-[#363940] w-[80%] min-h-full">
-                  {children}
-                </div>
+                <div className="bg-[#363940] w-[80%]">{children}</div>
               </main>
             </div>
           </div>

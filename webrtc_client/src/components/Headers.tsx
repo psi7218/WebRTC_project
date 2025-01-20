@@ -58,7 +58,6 @@ const Header = () => {
       <div>
         {userId !== -1 ? (
           <div className="flex gap-3">
-            <div>{username}</div>
             <button onClick={handleLogOut}>logout</button>
           </div>
         ) : (
