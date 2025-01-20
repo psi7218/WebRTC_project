@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useWebSocketStore } from "@/store/useWebsocketStore";
+import { useWebSocketStore } from "@/store/useWebSocketStore";
 
 const useWebSocket = (channelId: number) => {
   const { connect, disconnect } = useWebSocketStore();

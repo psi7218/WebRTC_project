@@ -15,9 +15,7 @@ const DirectMessagePage = () => {
 
   useWebSocket(Number(chattingRoodId));
 
-  const { data: channelData, isLoading: isLoadingChannel } = useChannel(
-    Number(chattingRoodId)
-  );
+  const { data: channelData } = useChannel(Number(chattingRoodId));
 
   const participantsQueries = useGetFriends(channelData?.participantIds || []);
   const isLoadingParticipants = participantsQueries.some((q) => q.isLoading);

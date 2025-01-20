@@ -1,5 +1,5 @@
 import { useUserStore } from "@/store/useUserStore";
-import { useWebSocketStore } from "@/store/useWebsocketStore";
+import { useWebSocketStore } from "@/store/useWebSocketStore";
 import React, { useState } from "react";
 
 const ChatInput = () => {

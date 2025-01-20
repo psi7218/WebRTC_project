@@ -1,8 +1,7 @@
 import React from "react";
 import dayjs from "dayjs";
-import { useWebSocketStore } from "@/store/useWebsocketStore";
-import { useState, useEffect } from "react";
-import axios from "axios";
+import { useWebSocketStore } from "@/store/useWebSocketStore";
+import { useEffect } from "react";
 import { getChannelMessages } from "@/apis/messages/messageApi";
 
 const MessageList = ({

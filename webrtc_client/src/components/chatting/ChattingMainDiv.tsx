@@ -3,7 +3,7 @@ import ChatInput from "./ChatInput";
 import ChattingUpperDiv from "./ChattingUpperDiv";
 import MessageList from "./MessageList";
 import { useState, useEffect, useRef } from "react";
-import { useWebSocketStore } from "@/store/useWebsocketStore";
+import { useWebSocketStore } from "@/store/useWebSocketStore";
 
 const ChattingMainDiv = ({ participantsData }) => {
   const channelId = useWebSocketStore((state) => state.channelId);
