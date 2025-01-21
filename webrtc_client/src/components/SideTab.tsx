@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { servers } from "@/dummydata/data";
+
 import { useState } from "react";
 import { Plus } from "lucide-react";
 import useCurrentTabStore from "@/store/useCurrentTabStore";
@@ -10,10 +10,16 @@ import { useRouter } from "next/navigation";
 import icon from "../../public/assets/discord-mark-white.png";
 
 import ServerModal from "./modal/ServerModal";
+import { useUserStore } from "@/store/useUserStore";
+import { useUserServers } from "@/hooks/queries/servers/userServers";
+import ServerThumbnail from "./server/ServerThumbnail";
 
 const SideTab = () => {
   const router = useRouter();
-  const [serverList, setServerList] = useState(servers);
+  const userId = useUserStore((state) => state.userId);
+  const username = useUserStore((state) => state.username);
+
+  const { data: serverList } = useUserServers(userId);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { setCurrentServer } = useCurrentTabStore();
@@ -28,9 +34,9 @@ const SideTab = () => {
 
   const gotoSpecificServer = (server: ServerProps) => {
     setCurrentServer(server);
-
+    console.log(server);
     const defaultchannel = server.channels[0];
-
+    console.log(defaultchannel);
     router.push(
       "/channels/" + server.serverId + "/" + defaultchannel["channelId"]
     );
@@ -45,7 +51,7 @@ const SideTab = () => {
         <Image
           src={icon}
           alt="icon"
-          className="w-12 h-9 object-cover rounded-full overflow-hidden"
+          className="w-12 h-9 object-cover rounded-full overflow-hidden duration-200"
           width={8}
           height={8}
           unoptimized
@@ -53,38 +59,39 @@ const SideTab = () => {
       </div>
 
       <div className="min-h-[90%] flex flex-col gap-2 mt-4 justify-center items-center">
-        {serverList.map((server: ServerProps) => (
-          <span
+        {serverList?.map((server: ServerProps) => (
+          <ServerThumbnail
             key={server.serverId}
-            className=""
+            server={server}
             onClick={() => gotoSpecificServer(server)}
-          >
-            {server.image ? (
-              <Image
-                src={server.image}
-                alt={server.serverName}
-                className="w-12 h-12 object-cover rounded-full overflow-hidden"
-                width={14}
-                height={14}
-                unoptimized
-              ></Image>
-            ) : (
-              <div className="w-12 h-12 text-white rounded-full bg-[#363940] overflow-hidden whitespace-nowrap flex items-center justify-center">
-                {server.serverName}
-              </div>
-            )}
-          </span>
+          />
         ))}
-        <div
-          className="w-12 h-12 text-white rounded-full bg-[#363940] overflow-hidden whitespace-nowrap flex items-center justify-center"
-          onClick={openModal}
-        >
-          <Plus size={24} color="green" />
+        <div className="group relative">
+          <div
+            className="w-12 h-12 text-white rounded-full group-hover:rounded-2xl bg-[#363940] group-hover:bg-[#077708] overflow-hidden whitespace-nowrap flex items-center justify-center transition-all duration-200"
+            onClick={openModal}
+          >
+            <Plus
+              size={24}
+              className="stroke-green group-hover:stroke-white transition-colors duration-1"
+            />
+          </div>
+          {/* 툴팁 */}
+          <div className="absolute left-full ml-4 top-1/2 -translate-y-1/2 hidden group-hover:block">
+            <div className="relative">
+              <div className="absolute right-full top-1/2 -translate-y-1/2 border-8 border-transparent border-r-[#18191c]" />
+              <div className="bg-[#18191c] text-white px-3 py-2 rounded-md whitespace-nowrap text-sm">
+                서버 추가하기
+              </div>
+            </div>
+          </div>
         </div>
-        <ServerModal isOpen={isModalOpen} onClose={closeModal}>
-          <h2 className="text-xl font-bold mb-4">서버 만들기</h2>
-          <p className="text-gray-400">나만의 서버를 만들어보세요</p>
-        </ServerModal>
+        <ServerModal
+          isOpen={isModalOpen}
+          onClose={closeModal}
+          username={username}
+          userId={userId}
+        />
       </div>
     </div>
   );

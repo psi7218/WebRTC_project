@@ -14,10 +14,7 @@ export const useWebSocketStore = create<WebSocketStore>((set, get) => ({
   isConnected: false,
   channelId: -1,
   connect: (channelId: number) => {
-    console.log("Connecting to channel:", channelId);
-
     set((state) => {
-      console.log("Setting channelId:", channelId);
       return { ...state, channelId };
     });
 
@@ -25,9 +22,7 @@ export const useWebSocketStore = create<WebSocketStore>((set, get) => ({
     client.connect(
       {},
       () => {
-        console.log("WebSocket connected, updating store...");
         set((state) => {
-          console.log("Updating store with connected state");
           return {
             ...state,
             stompClient: client,
@@ -44,7 +39,6 @@ export const useWebSocketStore = create<WebSocketStore>((set, get) => ({
     );
   },
   disconnect: () => {
-    console.log("Disconnecting...");
     const { stompClient } = get();
     if (stompClient?.connected) {
       stompClient.disconnect();

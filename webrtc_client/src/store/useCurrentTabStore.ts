@@ -2,6 +2,8 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { ServerProps } from "@/types/type";
 
+/// 추후에 바꾸자. tab 기준이 아니라 참여하고 있는 음성 채널을 저장하는 서버로 해야됨
+
 interface useCurrentTabStoreState {
   currentServer: ServerProps | null;
   setCurrentServer: (currentServerId: ServerProps | null) => void;
