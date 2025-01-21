@@ -6,7 +6,7 @@ public class    ServerDTO {
     private long serverId;
     private String serverName;
     private long serverAdminId;
-    private String image;
+    private String serverThumbnail;
     private List<ChannelDTO> channels;
 
     // Constructor
@@ -14,7 +14,7 @@ public class    ServerDTO {
         this.serverId = serverId;
         this.serverName = serverName;
         this.serverAdminId = serverAdminId;
-        this.image = image;
+        this.serverThumbnail = serverThumbnail;
         this.channels = channels;
     }
 
@@ -43,12 +43,12 @@ public class    ServerDTO {
         this.serverAdminId = serverAdminId;
     }
 
-    public String getImage() {
-        return image;
+    public String getServerThumbnail() {
+        return serverThumbnail;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void setServerThumbnail(String image) {
+        this.serverThumbnail = serverThumbnail;
     }
 
     public List<ChannelDTO> getChannels() {

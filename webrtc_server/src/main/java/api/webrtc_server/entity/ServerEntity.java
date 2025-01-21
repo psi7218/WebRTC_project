@@ -9,13 +9,16 @@ public class ServerEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private Long serverId;
+
 
     private String serverName;
 
-    @ManyToOne
-    @JoinColumn(name = "serverAdminId", nullable = false)
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "server_admin_id", nullable = false)
     private UserEntity serverAdmin;
+
 
     private String serverThumbnail;
 

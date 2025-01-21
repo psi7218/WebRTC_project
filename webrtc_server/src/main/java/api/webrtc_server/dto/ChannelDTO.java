@@ -7,7 +7,7 @@ public class ChannelDTO {
     private String channelName; // 필드명 통일
     private String channelType; // 필드명 통일
     private Long userId;
-    private Long participantId;  // DM 대화 상대 ID
+//    private Long participantId;  // DM 대화 상대 ID
     private List<Long> participantIds;  // 필요한 경우 전체 참여자 목록
 
     public ChannelDTO() {
@@ -64,13 +64,13 @@ public class ChannelDTO {
     public void setChannelType(String channelType) {
         this.channelType = channelType;
     }
-    public Long getParticipantId() {
-        return participantId;
-    }
-
-    public void setParticipantId(Long participantId) {
-        this.participantId = participantId;
-    }
+//    public Long getParticipantId() {
+//        return participantId;
+//    }
+//
+//    public void setParticipantId(Long participantId) {
+//        this.participantId = participantId;
+//    }
 
     public List<Long> getParticipantIds() {
         return participantIds;
