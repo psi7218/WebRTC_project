@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Camera } from "lucide-react";
 import { createServer } from "@/apis/servers/serverApi";
+import { useCreateServer } from "@/hooks/mutations/servers/useServerMutations";
 interface ServerModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -14,6 +15,7 @@ const ServerModal = ({
   userId,
 }: ServerModalProps) => {
   const [serverName, setServerName] = useState(`${username}의 서버`);
+  const createServerMutation = useCreateServer();
 
   if (typeof window === "undefined") return null;
   if (!isOpen) return null;
@@ -23,13 +25,16 @@ const ServerModal = ({
   };
 
   const handleCreateServer = async () => {
-    const data = {
-      serverName: serverName,
-      serverThumbnail: null,
-      serverAdminId: userId,
-    };
-    await createServer(data);
-    onClose();
+    try {
+      await createServerMutation.mutateAsync({
+        serverName: serverName,
+        serverAdminId: userId,
+        serverThumbnail: null,
+      });
+      onClose();
+    } catch (error) {
+      console.error("서버 생성 실패:", error);
+    }
   };
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">

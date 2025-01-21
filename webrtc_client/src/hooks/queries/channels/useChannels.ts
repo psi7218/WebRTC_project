@@ -1,10 +1,6 @@
 import { useQueries, useQuery } from "@tanstack/react-query";
 import { channelKeys } from "@/apis/channel/channelKeys";
-import {
-  getAllChannels,
-  getChannelsByServer,
-  getChannelById,
-} from "@/apis/channel/channelApi";
+import { getChannelsByServer, getChannelById } from "@/apis/channel/channelApi";
 
 export const useChannels = (channelIds: number[]) => {
   const results = useQueries({
@@ -18,4 +14,13 @@ export const useChannels = (channelIds: number[]) => {
     }),
   });
   return results;
+};
+
+export const useChannelsByServerId = (serverId: number) => {
+  return useQuery({
+    queryKey: channelKeys.getChannelsById(serverId),
+    queryFn: () => getChannelsByServer(serverId),
+    enabled: !!serverId,
+    staleTime: 5 * 60 * 1000,
+  });
 };

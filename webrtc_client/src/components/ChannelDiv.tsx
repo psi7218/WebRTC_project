@@ -45,7 +45,7 @@ const ChannelDiv: React.FC<ChannelDivProps> = ({
             ) : (
               <Volume2Icon size={16} />
             )}
-            <h1>{channel.name}</h1>
+            <h1>{channel.channelName}</h1>
           </div>
         ))}
       </div>

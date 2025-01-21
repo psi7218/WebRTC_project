@@ -1,17 +1,22 @@
 import useCurrentTab from "@/store/useCurrentTabStore";
 
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import ChannelDiv from "./ChannelDiv";
-
+import { useChannelsByServerId } from "@/hooks/queries/channels/useChannels";
 const ChannelContainer = () => {
+  const params = useParams();
+  const serverId = params["serverId"];
+
+  const { data: channelList } = useChannelsByServerId(Number(serverId));
+
   const { currentServer } = useCurrentTab();
   const router = useRouter();
-  const chattingChannels = currentServer?.channels.filter(
-    (channel) => channel.type === "chatting"
+  const chattingChannels = channelList?.filter(
+    (channel) => channel.channelType === "CHATTING"
   );
 
-  const vocalChannels = currentServer?.channels.filter(
-    (channel) => channel.type === "voice"
+  const vocalChannels = channelList?.filter(
+    (channel) => channel.channelType === "VOICE"
   );
 
   const gotoChannel = (channelId: number) => {

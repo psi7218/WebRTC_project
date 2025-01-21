@@ -6,4 +6,9 @@ export const channelKeys = {
     "search",
     participatingId,
   ],
+  getChannelsById: (serverId: number) => [
+    ...channelKeys.all,
+    "getChannelSById",
+    serverId,
+  ],
 };

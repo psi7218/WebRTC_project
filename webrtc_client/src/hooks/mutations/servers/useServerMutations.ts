@@ -10,13 +10,16 @@ export const useCreateServer = () => {
     onSuccess: (newServer) => {
       // 서버 목록 쿼리 무효화
       queryClient.invalidateQueries({
-        queryKey: serverKeys.list(),
+        queryKey: serverKeys.all,
       });
 
       // 새로운 서버를 캐시에 즉시 추가
-      queryClient.setQueryData(serverKeys.list(), (old: any) => {
-        return old ? [...old, newServer] : [newServer];
-      });
+      queryClient.setQueryData(
+        serverKeys.byUserId(newServer.serverAdminId),
+        (old: any) => {
+          return old ? [...old, newServer] : [newServer];
+        }
+      );
     },
   });
 };
