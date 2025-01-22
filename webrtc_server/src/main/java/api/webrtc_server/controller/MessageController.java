@@ -26,19 +26,28 @@ public class MessageController {
 
     private final MessageRepository messageRepository;
     private final ChannelRepository channelRepository;
+    private final UserRepository userRepository;
 
-    public MessageController(MessageRepository messageRepository, ChannelRepository channelRepository) {
+    public MessageController(
+            MessageRepository messageRepository,
+            ChannelRepository channelRepository,
+            UserRepository userRepository) {  // 생성자 수정
         this.messageRepository = messageRepository;
         this.channelRepository = channelRepository;
+        this.userRepository = userRepository;
     }
 
     // WebSocket을 통한 메시지 송신
     @MessageMapping("/channel/{channelId}/send")
     @SendTo("/topic/channel/{channelId}")
-    public MessageEntity sendChannelMessage(
+    public MessageDTO sendChannelMessage(
             @DestinationVariable Long channelId,
             @Payload MessageDTO messageDTO) {
         logger.info("Received Message: {}", messageDTO);
+
+        // 사용자 정보 조회
+        UserEntity user = userRepository.findById(messageDTO.getUserId())
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
         MessageEntity message = new MessageEntity();
         message.setChannelId(channelId);
@@ -46,7 +55,17 @@ public class MessageController {
         message.setContent(messageDTO.getContent());
         message.setCreatedAt(LocalDateTime.now());
 
-        return messageRepository.save(message);
+        MessageEntity savedMessage = messageRepository.save(message);
+
+        // Entity를 DTO로 변환하여 반환
+        MessageDTO responseDTO = new MessageDTO();
+        responseDTO.setMessageId(savedMessage.getMessageId());
+        responseDTO.setUserId(savedMessage.getUserId());
+        responseDTO.setUsername(user.getUsername());  // username 설정
+        responseDTO.setContent(savedMessage.getContent());
+        responseDTO.setCreatedAt(savedMessage.getCreatedAt());
+
+        return responseDTO;
     }
 
     // REST API를 통한 메시지 전송
@@ -71,7 +90,24 @@ public class MessageController {
 
     // 특정 채널의 메시지 조회
     @GetMapping("/channel/{channelId}")
-    public List<MessageEntity> getChannelMessages(@PathVariable Long channelId) {
-        return messageRepository.findAllByChannelId(channelId);
+    public List<MessageDTO> getChannelMessages(@PathVariable Long channelId) {
+        List<MessageEntity> messages = messageRepository.findAllByChannelId(channelId);
+
+        return messages.stream()
+                .map(message -> {
+                    MessageDTO dto = new MessageDTO();
+                    dto.setMessageId(message.getMessageId());
+                    dto.setUserId(message.getUserId());
+
+                    // 각 메시지에 대해 사용자 정보 조회
+                    UserEntity user = userRepository.findById(message.getUserId())
+                            .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+                    dto.setUsername(user.getUsername());
+                    dto.setContent(message.getContent());
+                    dto.setCreatedAt(message.getCreatedAt());
+                    return dto;
+                })
+                .toList();
     }
 }
