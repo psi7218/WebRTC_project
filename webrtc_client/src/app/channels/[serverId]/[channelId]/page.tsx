@@ -4,14 +4,11 @@ import { useParams } from "next/navigation";
 import { useChannelById } from "@/hooks/queries/channels/useChannel";
 import ChattingChannel from "@/components/channel/ChattingChannel";
 import VoiceChannel from "@/components/channel/VoiceChannel";
-import useWebSocket from "@/hooks/custom/useWebSocket";
 
 const ContentContainer = () => {
   const params = useParams();
   const chattingRoomId = params["channelId"];
   const { data: channelInfo } = useChannelById(Number(chattingRoomId));
-
-  // useWebSocket(Number(chattingRoomId));
 
   return (
     <>

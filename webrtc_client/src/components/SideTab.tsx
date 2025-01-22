@@ -22,29 +22,35 @@ const SideTab = () => {
   const { data: serverList } = useUserServers(userId);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const { setCurrentServer } = useCurrentTabStore();
-
+  const { setCurrentViewingTab } = useCurrentTabStore();
+  const currentViewingTab = useCurrentTabStore(
+    (state) => state.currentViewingTab
+  );
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
   const gotoDMTab = () => {
-    setCurrentServer(null);
+    setCurrentViewingTab(null);
     router.push("/channels/me");
   };
 
   const gotoSpecificServer = (server: ServerProps) => {
-    setCurrentServer(server);
-    console.log(server);
     const defaultchannel = server.channels[0];
-    console.log(defaultchannel);
+    setCurrentViewingTab(defaultchannel["channelId"]);
     router.push(
       "/channels/" + server.serverId + "/" + defaultchannel["channelId"]
     );
   };
+
   return (
     <div className="min-h-screen">
       <div
-        className="min-h-[10%] min-w-full flex justify-center items-center h-16 bg-blue-500 rounded-3xl"
+        className={`min-h-[10%] min-w-full flex justify-center items-center h-16 
+          ${
+            currentViewingTab === null
+              ? "bg-blue-500 rounded-2xl"
+              : "bg-[#363940] rounded-full hover:bg-blue-500 hover:rounded-2xl"
+          } transition-all duration-200`}
         style={{ transform: "scale(0.8)" }}
         onClick={() => gotoDMTab()}
       >
@@ -63,6 +69,9 @@ const SideTab = () => {
           <ServerThumbnail
             key={server.serverId}
             server={server}
+            isActive={server.channels.some(
+              (channel) => channel.channelId === currentViewingTab
+            )}
             onClick={() => gotoSpecificServer(server)}
           />
         ))}

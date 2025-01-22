@@ -1,6 +1,16 @@
 import Image from "next/image";
 
-const serverThumbnail = ({ server, onClick }) => {
+interface ServerThumbnailProps {
+  server: any;
+  isActive: boolean;
+  onClick: () => void;
+}
+
+const serverThumbnail = ({
+  server,
+  isActive,
+  onClick,
+}: ServerThumbnailProps) => {
   return (
     <div className="group relative">
       <span onClick={onClick}>
@@ -14,7 +24,14 @@ const serverThumbnail = ({ server, onClick }) => {
             unoptimized
           />
         ) : (
-          <div className="w-12 h-12 text-white rounded-full group-hover:rounded-2xl bg-[#363940] group-hover:bg-[#5865F2] overflow-hidden whitespace-nowrap flex items-center justify-center transition-all duration-100">
+          <div
+            className={`w-12 h-12 text-white overflow-hidden whitespace-nowrap flex items-center justify-center transition-all duration-200
+            ${
+              isActive
+                ? "bg-blue-500 rounded-2xl"
+                : "bg-[#363940] rounded-full group-hover:rounded-2xl group-hover:bg-blue-500"
+            }`}
+          >
             {server.serverName}
           </div>
         )}
