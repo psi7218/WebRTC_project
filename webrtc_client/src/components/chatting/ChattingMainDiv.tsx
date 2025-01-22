@@ -7,8 +7,7 @@ import { useWebSocketStore } from "@/store/useWebSocketStore";
 
 const ChattingMainDiv = ({ participantsData }) => {
   const channelId = useWebSocketStore((state) => state.channelId);
-  const storeState = useWebSocketStore();
-  console.log("WebSocket Store State:", storeState);
+  const stompClient = useWebSocketStore((state) => state.stompClient);
 
   const [messages, setMessages] = useState([]);
   const messageEndRef = useRef(null);
@@ -27,17 +26,16 @@ const ChattingMainDiv = ({ participantsData }) => {
           <div className="space-y-8">
             <ChattingUpperDiv participantsData={participantsData} />
             <MessageList
-              participantsData={participantsData}
               channelId={channelId}
               messages={messages}
               setMessages={setMessages}
+              stompClient={stompClient}
             />
           </div>
           <div ref={messageEndRef} />
         </div>
       </div>
 
-      {/* 하단 고정 입력 영역 */}
       <div className="flex-none p-4 border-t border-gray-600">
         <ChatInput />
       </div>

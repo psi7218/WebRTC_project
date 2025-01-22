@@ -3,7 +3,7 @@
 import useWebSocket from "@/hooks/custom/useWebSocket";
 import { useParams } from "next/navigation";
 
-import { useChannel } from "@/hooks/queries/channels/useChannel";
+import { useChannelById } from "@/hooks/queries/channels/useChannel";
 import { useGetFriends } from "@/hooks/queries/users/useUsers";
 
 import DmHeaders from "@/components/dm/DmHeaders";
@@ -15,7 +15,7 @@ const DirectMessagePage = () => {
 
   useWebSocket(Number(chattingRoodId));
 
-  const { data: channelData } = useChannel(Number(chattingRoodId));
+  const { data: channelData } = useChannelById(Number(chattingRoodId));
 
   const participantsQueries = useGetFriends(channelData?.participantIds || []);
   const isLoadingParticipants = participantsQueries.some((q) => q.isLoading);

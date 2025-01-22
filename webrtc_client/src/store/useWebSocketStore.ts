@@ -7,12 +7,19 @@ interface WebSocketStore {
   channelId: number;
   connect: (channelId: number) => void;
   disconnect: () => void;
+  updateChannelId: (channelId: number) => void;
 }
 
 export const useWebSocketStore = create<WebSocketStore>((set, get) => ({
   stompClient: null,
   isConnected: false,
   channelId: -1,
+  updateChannelId: (channelId: number) => {
+    const { disconnect, connect } = get();
+    disconnect();
+    connect(channelId);
+  },
+
   connect: (channelId: number) => {
     set((state) => {
       return { ...state, channelId };
@@ -29,11 +36,8 @@ export const useWebSocketStore = create<WebSocketStore>((set, get) => ({
             isConnected: true,
           };
         });
-        const currentState = get();
-        console.log("Current store state:", currentState);
       },
       (error) => {
-        console.error("WebSocket connection error:", error);
         set((state) => ({ ...state, isConnected: false }));
       }
     );
@@ -43,7 +47,6 @@ export const useWebSocketStore = create<WebSocketStore>((set, get) => ({
     if (stompClient?.connected) {
       stompClient.disconnect();
       set({ stompClient: null, isConnected: false, channelId: -1 });
-      console.log("Disconnected, store reset");
     }
   },
 }));
