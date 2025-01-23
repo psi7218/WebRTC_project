@@ -14,7 +14,6 @@ const Header = () => {
 
   const {
     userId,
-    username,
     setUserId,
     setEmail,
     setFriendIds,
@@ -92,7 +91,11 @@ const Header = () => {
             onChange={handleTypedPassword}
           />
           <div className="flex items-center">
-            <button className="px-4 py-2 rounded" onClick={handlelogin}>
+            <button
+              data-testid="modal-login-btn"
+              className="px-4 py-2 rounded"
+              onClick={handlelogin}
+            >
               LOGIN
             </button>
           </div>

@@ -17,9 +17,9 @@ const AuthenticateModal = ({
   if (!modalRoot) return null;
 
   return createPortal(
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
+    <div className="fixed inset-0 z-[60] flex items-center justify-center">
       <div className="absolute inset-0 bg-black/60" onClick={onClose} />
-      <div className="relative z-50 bg-[#363940] rounded-md p-6 w-[480px] text-white">
+      <div className="relative z-[61] bg-[#363940] rounded-md p-6 w-[480px] text-white">
         {children}
       </div>
     </div>,

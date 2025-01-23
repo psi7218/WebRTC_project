@@ -22,21 +22,24 @@ const SideTab = () => {
   const { data: serverList } = useUserServers(userId);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const { setCurrentViewingTab } = useCurrentTabStore();
+  const { setCurrentViewingTab, setCurrentServer } = useCurrentTabStore();
   const currentViewingTab = useCurrentTabStore(
     (state) => state.currentViewingTab
   );
+
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
   const gotoDMTab = () => {
     setCurrentViewingTab(null);
+    setCurrentServer(null);
     router.push("/channels/me");
   };
 
   const gotoSpecificServer = (server: ServerProps) => {
     const defaultchannel = server.channels[0];
     setCurrentViewingTab(defaultchannel["channelId"]);
+    setCurrentServer(server);
     router.push(
       "/channels/" + server.serverId + "/" + defaultchannel["channelId"]
     );

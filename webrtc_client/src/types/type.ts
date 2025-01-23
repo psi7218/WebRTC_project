@@ -18,8 +18,8 @@ export interface ChannelProps {
 export interface ServerProps {
   serverId: number;
   serverName: string;
-  serverAdmin: number;
-  image: string;
+  serverAdminId: number;
+  serverThumbnail: string;
   channels: ChannelProps[];
 }
 

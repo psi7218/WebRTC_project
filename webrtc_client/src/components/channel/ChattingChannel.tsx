@@ -10,15 +10,6 @@ const ChattingChannel = ({ channelInfo }) => {
   const channelId = useWebSocketStore((state) => state.channelId);
   const stompClient = useWebSocketStore((state) => state.stompClient);
 
-  // const messageEndRef = useRef(null);
-
-  // const scrollToBottom = () => {
-  //   messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  // };
-  // useEffect(() => {
-  //   scrollToBottom();
-  // }, [messages]);
-
   return (
     <div className="flex flex-col h-full">
       <div className="flex h-12 pl-5 items-center gap-2">

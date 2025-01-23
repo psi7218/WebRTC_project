@@ -1,16 +1,16 @@
 // 전역변수 관리를 통해서 dm 컨테이너와 채널목록 컨테이너 분기
 "use client";
 import Lobby from "./Lobby";
-import useCurrentTab from "../store/useCurrentTabStore";
 import ChannelContainer from "./ChannelContainer";
 import { useUserStore } from "@/store/useUserStore";
 import PersonalThumbnail from "./ui/PersonalThumbnail";
+import useCurrentTabStore from "../store/useCurrentTabStore";
 
 const SubContainer = () => {
   const userId = useUserStore((state) => state.userId);
   const logo_color = useUserStore((state) => state.thumbnailColor);
   const username = useUserStore((state) => state.username);
-  const { currentServer } = useCurrentTab();
+  const currentServer = useCurrentTabStore((state) => state.currentServer);
 
   return (
     <div className="h-full flex flex-col">
