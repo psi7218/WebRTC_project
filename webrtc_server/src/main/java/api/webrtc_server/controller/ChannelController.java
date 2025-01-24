@@ -7,10 +7,16 @@ import api.webrtc_server.entity.UserEntity;
 import api.webrtc_server.repository.ChannelRepository;
 import api.webrtc_server.repository.ServerRepository;
 import api.webrtc_server.repository.UserRepository;
+import io.openvidu.java.client.OpenVidu;
+import io.openvidu.java.client.OpenViduHttpException;
+import io.openvidu.java.client.OpenViduJavaClientException;
+import io.openvidu.java.client.SessionProperties;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -22,13 +28,18 @@ public class ChannelController {
     private final ChannelRepository channelRepository;
     private final ServerRepository serverRepository;
     private final UserRepository userRepository;  // UserRepository 추가
+    private final OpenVidu openvidu;
 
+    @Autowired
     public ChannelController(ChannelRepository channelRepository,
                              ServerRepository serverRepository,
-                             UserRepository userRepository) {  // 생성자에 추가
+                             UserRepository userRepository,
+                             OpenVidu openvidu
+                         ) {
         this.channelRepository = channelRepository;
         this.serverRepository = serverRepository;
         this.userRepository = userRepository;
+        this.openvidu = openvidu;
     }
 
     // 모든 채널 조회
@@ -48,9 +59,9 @@ public class ChannelController {
                 .collect(Collectors.toList());
     }
 
-    // 1. 채널 생성
-    @PostMapping("/{serverId}")
-    public ChannelEntity createChannel(
+    // 1. 채팅 채널 생성
+    @PostMapping("/chatting/{serverId}")
+    public ChannelEntity createChattingChannel(
             @PathVariable Long serverId,
             @RequestBody ChannelDTO channelDTO) {
 
@@ -61,12 +72,57 @@ public class ChannelController {
         // 채널 생성 및 매핑
         ChannelEntity channel = new ChannelEntity();
         channel.setServer(server);
-        channel.setChannelName(channelDTO.getChannelName
-());
-        channel.setChannelType(ChannelEntity.ChannelType.valueOf(channelDTO.getChannelType().toUpperCase()));
+        channel.setChannelName(channelDTO.getChannelName());
+        channel.setChannelType(ChannelEntity.ChannelType.CHATTING);
 
         return channelRepository.save(channel);
     }
+
+    // voice채널 생성
+    @PostMapping("/voice/{serverId}")
+    public ResponseEntity<Map<String, Object>> createVoiceChannel(
+            @PathVariable Long serverId,
+            @RequestBody ChannelDTO channelDTO) {
+
+        // 1) 서버 확인
+        ServerEntity server = serverRepository.findById(serverId)
+                .orElseThrow(() -> new IllegalArgumentException("Server not found with ID: " + serverId));
+
+        // 2) DB에 ChannelEntity 생성 (channelType=VOICE)
+        ChannelEntity channel = new ChannelEntity();
+        channel.setServer(server);
+        channel.setChannelName(channelDTO.getChannelName());
+        channel.setChannelType(ChannelEntity.ChannelType.VOICE);
+
+        // (사용자 ID, participantIds 등 필요한 경우 설정)
+        if (channelDTO.getUserId() != null) {
+            channel.setUserId(channelDTO.getUserId());
+        }
+
+        channel = channelRepository.save(channel); // DB에 저장 -> channelId 할당
+
+        // 3) OpenVidu 세션 생성 (customSessionId = channelId)
+        String customSessionId = channel.getChannelId().toString();
+
+        Map<String, Object> sessionParams = new HashMap<>();
+        sessionParams.put("customSessionId", customSessionId);
+
+        try {
+            SessionProperties props = SessionProperties.fromJson(sessionParams).build();
+            openvidu.createSession(props);
+            // 반환값 session.getSessionId()가 굳이 필요 없으면 무시
+        } catch (OpenViduJavaClientException | OpenViduHttpException e) {
+            throw new RuntimeException("OpenVidu session creation failed", e);
+        }
+
+        // 4) 응답으로 channelId만 반환
+        Map<String, Object> response = new HashMap<>();
+        response.put("channelId", channel.getChannelId());
+        response.put("message", "Voice channel created with OpenVidu session ID=" + customSessionId);
+
+        return ResponseEntity.ok(response);
+    }
+
     // dm 채널 생성
     @PostMapping("/dm/{userId}")
     public ChannelEntity createDMChannel(
@@ -177,5 +233,6 @@ public class ChannelController {
                         "remainingParticipants", channel.getParticipantIds().size()
                 ));
     }
+
 
 }

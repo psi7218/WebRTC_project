@@ -9,9 +9,7 @@ public class ServerEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private Long serverId;
-
 
     private String serverName;
 

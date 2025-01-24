@@ -6,10 +6,17 @@ import api.webrtc_server.dto.ServerDTO;
 import api.webrtc_server.entity.ChannelEntity;
 import api.webrtc_server.entity.ServerEntity;
 import api.webrtc_server.entity.UserEntity;
+import api.webrtc_server.repository.ChannelRepository;
 import api.webrtc_server.repository.ServerRepository;
 import api.webrtc_server.repository.UserRepository;
+import io.openvidu.java.client.OpenVidu;
+import io.openvidu.java.client.OpenViduHttpException;
+import io.openvidu.java.client.OpenViduJavaClientException;
+import io.openvidu.java.client.SessionProperties;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -25,12 +32,18 @@ public class ServerController {
 
     private final ServerRepository serverRepository;
     private final UserRepository userRepository;
+    private final ChannelRepository channelRepository;
+    private final OpenVidu openVidu;
 
-    public ServerController(ServerRepository serverRepository, UserRepository userRepository) {
+    @Autowired
+    public ServerController(ServerRepository serverRepository, UserRepository userRepository, ChannelRepository channelRepository, OpenVidu openVidu) {
         this.serverRepository = serverRepository;
         this.userRepository = userRepository;
+        this.channelRepository = channelRepository;
+        this.openVidu = openVidu;
     }
 
+    @Transactional
     @PostMapping
     public ResponseEntity<ServerDTO> createServer(@RequestBody CreateServerDTO createServerDTO) {
         try {
@@ -44,6 +57,8 @@ public class ServerController {
             server.setServerAdmin(serverAdmin);
             server.setServerThumbnail(createServerDTO.getServerThumbnail());
 
+            server = serverRepository.save(server);
+
             // 기본 채널 리스트 생성
             List<ChannelEntity> defaultChannels = new ArrayList<>();
 
@@ -55,6 +70,8 @@ public class ServerController {
             chattingChannel.setUserId(serverAdmin.getUserId());
             defaultChannels.add(chattingChannel);
 
+            chattingChannel = channelRepository.save(chattingChannel);
+
             // 음성 채널 생성
             ChannelEntity voiceChannel = new ChannelEntity();
             voiceChannel.setChannelName("음성 채널");
@@ -64,18 +81,35 @@ public class ServerController {
             defaultChannels.add(voiceChannel);
 
             // 서버에 채널 리스트 설정
-            server.setChannels(defaultChannels);
+            voiceChannel = channelRepository.save(voiceChannel);
 
+            if (voiceChannel.getChannelType() == ChannelEntity.ChannelType.VOICE) {
+                try {
+                    String sessionId = voiceChannel.getChannelId().toString(); // channelId를 sessionId로 사용
+                    SessionProperties props = new SessionProperties.Builder()
+                            .customSessionId(sessionId) // channelId를 세션 ID로 사용
+                            .build();
+                    openVidu.createSession(props);
+                    // OpenVidu 세션 ID는 channelId를 사용하므로 별도로 저장할 필요 없음
+                } catch (OpenViduJavaClientException | OpenViduHttpException e) {
+                    e.printStackTrace();
+                    // 세션 생성 실패 시, 음성 채널 삭제
+                    channelRepository.delete(voiceChannel);
+                    throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to create OpenVidu session: " + e.getMessage());
+                }
+            }
+
+            server.setChannels(defaultChannels);
             // 저장
-            ServerEntity savedServer = serverRepository.save(server);
+            server = serverRepository.save(server);
 
             // DTO로 변환하여 반환
             return ResponseEntity.ok(new ServerDTO(
-                    savedServer.getServerId(),
-                    savedServer.getServerName(),
+                    server.getServerId(),
+                    server.getServerName(),
                     serverAdmin.getUserId(),
-                    savedServer.getServerThumbnail(),
-                    savedServer.getChannels().stream()
+                    server.getServerThumbnail(),
+                    server.getChannels().stream()
                             .map(channel -> new ChannelDTO(
                                     channel.getChannelId(),
                                     channel.getChannelName(),
