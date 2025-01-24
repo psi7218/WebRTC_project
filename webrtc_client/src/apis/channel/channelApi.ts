@@ -9,9 +9,18 @@ export const getAllChannels = async () => {
   }
 };
 
-export const createChannel = async (serverId: number) => {
+export const createChattingChannel = async (serverId: number) => {
   try {
-    const response = await axiosInstance.post(`channels/${serverId}`);
+    const response = await axiosInstance.post(`channels/chatting/${serverId}`);
+    return response.data;
+  } catch (e) {
+    throw e;
+  }
+};
+
+export const createVoiceChannel = async (serverId: number) => {
+  try {
+    const response = await axiosInstance.post(`channels/voice/${serverId}`);
     return response.data;
   } catch (e) {
     throw e;

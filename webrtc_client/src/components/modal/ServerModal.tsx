@@ -36,6 +36,7 @@ const ServerModal = ({
       console.error("서버 생성 실패:", error);
     }
   };
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div className="absolute inset-0 bg-black/60" onClick={onClose} />
