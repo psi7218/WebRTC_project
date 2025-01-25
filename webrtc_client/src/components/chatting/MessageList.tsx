@@ -29,7 +29,7 @@ const MessageList = ({ channelId, stompClient }) => {
   }, [stompClient, channelId, updateMessagesCache]);
 
   const scrollToBottom = () => {
-    messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    messageEndRef.current?.scrollIntoView(false);
   };
   useEffect(() => {
     scrollToBottom();

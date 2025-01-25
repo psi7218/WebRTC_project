@@ -2,13 +2,16 @@
 
 import { Plus, BellRing } from "lucide-react";
 import PersonalThumbnail from "./ui/PersonalThumbnail";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useUserStore } from "@/store/useUserStore";
 import { useChannels } from "@/hooks/queries/channels/useChannels";
+import clsx from "clsx";
 
 const Lobby = () => {
   const router = useRouter();
-  const { participatingChannelIds, userId, password } = useUserStore();
+  const params = useParams();
+  const { participatingChannelIds } = useUserStore();
+  const currentDMChannelId = params["chattingRoomId"];
 
   const channelQueries = useChannels(participatingChannelIds);
 
@@ -20,6 +23,9 @@ const Lobby = () => {
     router.push(`/channels/me/${channelId}`);
   };
 
+  const goToFriendTab = () => {
+    router.push(`/channels/me`);
+  };
   return (
     <>
       <input
@@ -32,17 +38,11 @@ const Lobby = () => {
       </div>
 
       <div
-        className=" flex 
-          items-center 
-          gap-2 
-          px-2 
-          py-2 
-          bg-[#3B3D43]  /* 선택된(활성) 상태를 가정: 어두운 회색 박스 */
-          text-white 
-          rounded 
-          cursor-pointer
-          w-full
-          h-10"
+        className={clsx(
+          "flex items-center gap-2 px-2 py-2 text-white rounded cursor-pointer w-full h-10",
+          currentDMChannelId ? "bg-transparent" : "bg-[#3B3D43]"
+        )}
+        onClick={goToFriendTab}
       >
         <BellRing className="w-5 h-5" />
         <span className="text-sm">친구</span>
@@ -52,23 +52,30 @@ const Lobby = () => {
         <Plus className="text-white w-5 h-5" />
       </div>
 
-      {/* todo: frienList가 아니라 dm리스트로 바꿔야 할듯? */}
       <div className="space-y-1">
-        {channelDataList.map((channel) => (
-          <div
-            key={channel.channelId}
-            className="flex justify-start mg-3 gap-2.5 p-1"
-            onClick={() => gotoDMDialog(channel.channelId)}
-          >
-            <PersonalThumbnail
-              logo_color={channel.logo_color}
-              thumbnail={channel.thumbnail}
-            />
-            <span className="flex justify-center items-center">
-              <p className="text-[#8E9BA4]">{channel.channelName}</p>
-            </span>
-          </div>
-        ))}
+        {channelDataList.map((channel) => {
+          // 숫자로 비교하려면 parseInt로 변환(또는 Number)
+          const isActive = channel.channelId === Number(currentDMChannelId);
+
+          return (
+            <div
+              key={channel.channelId}
+              onClick={() => gotoDMDialog(channel.channelId)}
+              className={clsx(
+                "flex justify-start mg-3 gap-2.5 p-1 cursor-pointer rounded",
+                isActive ? "bg-[#3B3D43] text-white" : "text-[#8E9BA4]"
+              )}
+            >
+              <PersonalThumbnail
+                logo_color={channel.logo_color}
+                thumbnail={channel.thumbnail}
+              />
+              <span className="flex justify-center items-center">
+                <p>{channel.channelName}</p>
+              </span>
+            </div>
+          );
+        })}
       </div>
     </>
   );
