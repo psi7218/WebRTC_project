@@ -15,8 +15,6 @@ const ChannelContainer = () => {
     (state) => state.currentViewingTab
   );
 
-  console.log(currentViewingTab);
-
   const { updateChannelId } = useWebSocketStore();
 
   const chattingChannels = channelList?.filter(

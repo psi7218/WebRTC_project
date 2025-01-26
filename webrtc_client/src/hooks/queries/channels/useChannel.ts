@@ -7,5 +7,8 @@ export const useChannelById = (channelId: number) => {
     queryKey: channelKeys.search(channelId),
     queryFn: () => getChannelById(channelId),
     staleTime: 5 * 60 * 1000,
+    enabled: !!channelId,
   });
 };
+
+// export const useConnectingVoiceChannel = (channelId: number) => {};

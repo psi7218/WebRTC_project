@@ -1,3 +1,4 @@
+import axios from "axios";
 import axiosInstance from "../instance/axiosInstance";
 
 export const getAllChannels = async () => {
@@ -63,6 +64,17 @@ export const removeUserFromDMChannel = async (
   try {
     const response = await axiosInstance.delete(
       `channels/dm/${channelId}/users/${userId}`
+    );
+    return response.data;
+  } catch (e) {
+    throw e;
+  }
+};
+
+export const connectingVoiceChannel = async (channelId: number) => {
+  try {
+    const response = await axiosInstance.post(
+      `sessions/${channelId}/connections`
     );
     return response.data;
   } catch (e) {
