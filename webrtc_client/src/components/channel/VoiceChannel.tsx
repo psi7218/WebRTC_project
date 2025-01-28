@@ -66,10 +66,7 @@ const VoiceChannel = () => {
   return (
     <div className="bg-black h-full w-full">
       {/* <h1>Voice Channel: {channelData?.channelName}</h1> */}
-      <div
-        id="publisher-container"
-        className="py-10 w-[300px] h-[200px] "
-      ></div>
+      <div id="publisher-container" className="py-10 w-[300px] h-[200px]"></div>
       {/* <div id="subscriber-container"></div> */}
     </div>
   );
