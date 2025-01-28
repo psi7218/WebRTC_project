@@ -1,0 +1,14 @@
+name: 개인 프로젝트 (WEBRTC + CI/CD)
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy-job:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Hello World 찍기...
+        run: echo "Hello World"
