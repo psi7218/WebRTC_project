@@ -5,6 +5,7 @@ import ChannelContainer from "./ChannelContainer";
 import { useUserStore } from "@/store/useUserStore";
 import PersonalThumbnail from "./ui/PersonalThumbnail";
 import useCurrentTabStore from "../store/useCurrentTabStore";
+import CurrentVoiceChannel from "./common/CurrentVoiceChannel";
 
 const SubContainer = () => {
   const userId = useUserStore((state) => state.userId);
@@ -16,6 +17,10 @@ const SubContainer = () => {
     <div className="h-full flex flex-col">
       <div className="h-[90%] p-2">
         {currentServer ? <ChannelContainer /> : <Lobby />}
+      </div>
+      {/* 현재 참여중인 음성 채널   */}
+      <div className="mt-auto">
+        <CurrentVoiceChannel />
       </div>
       <div className="h-[10%] flex flex-col">
         {userId !== -1 && (

@@ -9,6 +9,13 @@ const ContentContainer = () => {
   const params = useParams();
   const chattingRoomId = params["channelId"];
   const { data: channelInfo } = useChannelById(Number(chattingRoomId));
+  // Add styles to ensure proper layout containment
+  const containerStyle = {
+    height: "100%",
+    width: "100%",
+    overflow: "hidden",
+    position: "relative" as const,
+  };
 
   return (
     <>
