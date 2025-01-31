@@ -1,105 +1,80 @@
-import { useParams } from "next/navigation";
-import { useCurrentVoiceChannel } from "@/stores/useCurrentVoiceChannel";
-import { useEffect } from "react";
-import { OpenVidu } from "openvidu-browser";
-import { useConnectingVoiceChannel } from "@/hooks/mutations/voiceChannel/useConnectingVoiceChannel";
-import { useChannelById } from "@/hooks/queries/channels/useChannel";
+import { useState } from "react";
+
+interface Participant {
+  id: string;
+  name: string;
+  isMuted: boolean;
+}
 
 const VoiceConnectingDiv = () => {
-  const params = useParams();
-  const channelId = params["channelId"];
-  const {
-    OV,
-    session,
-    publisher,
-    isConnected,
-    setOV,
-    setSession,
-    setPublisher,
-    setIsConnected,
-    setVoiceChannel,
-    disconnect,
-  } = useCurrentVoiceChannel();
+  // 임시로 참가자 목록을 하드코딩 (실제로는 OpenVidu 세션에서 받아와야 함)
+  const [participants, setParticipants] = useState<Participant[]>([
+    { id: "1", name: "나", isMuted: false },
+    { id: "2", name: "참가자2", isMuted: true },
+    { id: "3", name: "참가자3", isMuted: false },
+    { id: "4", name: "참가자4", isMuted: true },
+  ]);
 
-  const { data: channelData, isLoading: channelLoading } =
-    useChannelById(channelId);
-  const { mutate: connectVoiceChannel } = useConnectingVoiceChannel();
-
-  useEffect(() => {
-    const ovInstance = new OpenVidu();
-    setOV(ovInstance);
-    if (channelId) {
-      setVoiceChannel(channelId);
-    }
-
-    return () => {
-      disconnect();
-    };
-  }, []);
-
-  useEffect(() => {
-    if (!channelId || channelLoading || isConnected || !OV) return;
-
-    connectVoiceChannel(channelId, {
-      onSuccess: async (token) => {
-        if (!token) {
-          console.error("No token received");
-          return;
-        }
-
-        try {
-          const newSession = OV.initSession();
-
-          newSession.on("sessionDisconnected", () => {
-            console.log("Session disconnected");
-            setIsConnected(false);
-          });
-
-          newSession.on("connectionDestroyed", () => {
-            console.log("Connection destroyed");
-          });
-
-          setSession(newSession);
-
-          await newSession.connect(token, {
-            clientData: "MyUserName",
-            connectionId: Date.now().toString(),
-          });
-
-          const newPublisher = OV.initPublisher("publisher-container", {
-            publishAudio: true,
-            publishVideo: false,
-            audioSource: undefined,
-            mirror: false,
-          });
-
-          await newSession.publish(newPublisher);
-          setPublisher(newPublisher);
-          setIsConnected(true);
-        } catch (error) {
-          console.error("Error initializing OpenVidu:", error);
-          setIsConnected(false);
-        }
-      },
-      onError: (error) => {
-        console.error("Error getting token:", error);
-        setIsConnected(false);
-      },
-    });
-  }, [channelId, channelLoading, connectVoiceChannel, isConnected, OV]);
-
-  if (channelLoading) {
-    return <div>Loading channel info...</div>;
-  }
+  // 그리드 레이아웃 클래스를 동적으로 결정
+  const getGridClass = () => {
+    return "grid grid-cols-2 gap-4";
+  };
 
   return (
-    <div className="h-full w-full flex flex-col bg-[#363940]">
-      <div className="flex-1 h-[calc(100vh-56px)] overflow-hidden">
-        <div className="p-4 h-full">
-          <div
-            id="publisher-container"
-            className="bg-gray-800 rounded-sm aspect-video flex items-center justify-center"
-          ></div>
+    <div className="h-full w-full flex flex-col bg-[#000000]">
+      <div className="flex-1 overflow-hidden">
+        {/* Voice Channel Content */}
+        <div className="p-3 h-[calc(100%-48px)]">
+          {/* Participants Grid */}
+          <div className={`${getGridClass()} h-full`}>
+            {participants.map((participant) => (
+              <div
+                key={participant.id}
+                className="relative bg-[#202225] rounded-lg aspect-video"
+              >
+                {/* Screen Share Container (비디오/화면 공유 영역) */}
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div
+                    id={`video-container-${participant.id}`}
+                    className="w-full h-full"
+                  ></div>
+                </div>
+
+                {/* Participant Info Overlay */}
+                <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/70 to-transparent">
+                  <div className="flex items-center space-x-3">
+                    <div className="relative">
+                      {/* User Avatar */}
+                      <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center">
+                        <svg
+                          className="w-6 h-6 text-[#202225]"
+                          fill="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                        </svg>
+                      </div>
+                    </div>
+
+                    {/* User Info */}
+                    <div className="flex-1 min-w-0">
+                      <p className="text-white text-sm font-medium truncate">
+                        {participant.name}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Hidden Video Container */}
+          <div className="hidden">
+            <div
+              id="publisher-container"
+              className="bg-gray-800 rounded-sm aspect-video flex items-center justify-center"
+            ></div>
+          </div>
         </div>
       </div>
     </div>

@@ -1,17 +1,20 @@
 "use client";
 
+import { useState } from "react";
 import { Plus, BellRing } from "lucide-react";
 import PersonalThumbnail from "./ui/PersonalThumbnail";
 import { useParams, useRouter } from "next/navigation";
 import { useUserStore } from "@/store/useUserStore";
 import { useChannels } from "@/hooks/queries/channels/useChannels";
 import clsx from "clsx";
+import CreateDMModal from "./modal/CreateDMModal";
 
 const Lobby = () => {
   const router = useRouter();
   const params = useParams();
   const { participatingChannelIds } = useUserStore();
   const currentDMChannelId = params["chattingRoomId"];
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
   const channelQueries = useChannels(participatingChannelIds);
 
@@ -19,6 +22,7 @@ const Lobby = () => {
     .map((query) => query.data)
     .filter(Boolean); // data가 undefined가 아닌 것만 필터링
 
+  console.log(channelDataList);
   const gotoDMDialog = (channelId: number) => {
     router.push(`/channels/me/${channelId}`);
   };
@@ -26,6 +30,7 @@ const Lobby = () => {
   const goToFriendTab = () => {
     router.push(`/channels/me`);
   };
+
   return (
     <>
       <input
@@ -49,7 +54,10 @@ const Lobby = () => {
       </div>
       <div className="mt-6 flex justify-between py-3">
         <p className="text-gray-400 text-xs font-bol pl-2">다이렉트 메세지</p>
-        <Plus className="text-white w-5 h-5" />
+        <Plus
+          className="text-white w-5 h-5 cursor-pointer hover:text-gray-300"
+          onClick={() => setIsCreateModalOpen(true)}
+        />
       </div>
 
       <div className="space-y-1">
@@ -77,6 +85,12 @@ const Lobby = () => {
           );
         })}
       </div>
+
+      {/* Create DM Modal */}
+      <CreateDMModal
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+      />
     </>
   );
 };

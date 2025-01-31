@@ -28,9 +28,15 @@ export const createVoiceChannel = async (serverId: number) => {
   }
 };
 
-export const createDMChannel = async (userId: number) => {
+export const createDMChannel = async (
+  userId: number,
+  participantIds: number[]
+) => {
   try {
-    const response = await axiosInstance.post(`channels/dm/${userId}`);
+    const response = await axiosInstance.post(`channels/dm/${userId}`, {
+      channelName: `DM Channel ${new Date().getTime()}`, // 임시 채널명 생성
+      participantIds: participantIds,
+    });
     return response.data;
   } catch (e) {
     throw e;
