@@ -11,7 +11,7 @@ import java.util.Map;
 
 @RestController
 @CrossOrigin(origins = "*")
-@RequestMapping("/api")
+@RequestMapping("/api/webrtc")
 public class WebRtcController {
 
     private final OpenVidu openvidu;

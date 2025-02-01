@@ -1,0 +1,25 @@
+version: "3.8"
+
+services:
+  frontend:
+    build:
+      context: ./webrtc_client
+      dockerfile: Dockerfile
+    image: psi7218/webrtc-frontend:latest
+    container_name: webrtc-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - NEXT_PUBLIC_API_URL=https://thiscord.store/api
+
+  backend:
+    build:
+      context: ./webrtc_server
+      dockerfile: Dockerfile
+    image: psi7218/webrtc-backend:latest
+    container_name: webrtc-backend
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
