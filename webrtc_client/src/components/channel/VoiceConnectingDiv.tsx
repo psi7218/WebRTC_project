@@ -11,8 +11,8 @@ const VoiceConnectingDiv = () => {
   const [participants, setParticipants] = useState<Participant[]>([
     { id: "1", name: "나", isMuted: false },
     { id: "2", name: "참가자2", isMuted: true },
-    { id: "3", name: "참가자3", isMuted: false },
-    { id: "4", name: "참가자4", isMuted: true },
+    // { id: "3", name: "참가자3", isMuted: false },
+    // { id: "4", name: "참가자4", isMuted: true },
   ]);
 
   // 그리드 레이아웃 클래스를 동적으로 결정
