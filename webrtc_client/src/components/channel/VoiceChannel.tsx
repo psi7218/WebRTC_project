@@ -6,10 +6,12 @@ import { useEffect } from "react";
 import { useCurrentVoiceChannel } from "@/stores/useCurrentVoiceChannel";
 import VoicePrevDiv from "./VoicePrevDiv";
 import VoiceConnectingDiv from "./VoiceConnectingDiv";
+import { useUserStore } from "@/store/useUserStore";
 
 const VoiceChannel = () => {
   const params = useParams();
   const channelId = params["channelId"];
+  const username = useUserStore((state) => state.username);
 
   const {
     isConnected,
@@ -18,12 +20,14 @@ const VoiceChannel = () => {
     setPublisher,
     setIsConnected,
     setVoiceChannel,
+    setSubscribers,
     disconnect,
   } = useCurrentVoiceChannel();
 
-  const { data: channelData, isLoading: channelLoading } =
-    useChannelById(channelId);
-  const { mutate: connectVoiceChannel } = useConnectingVoiceChannel();
+  const { data: channelData, isLoading: channelLoading } = useChannelById(
+    Number(channelId)
+  );
+  const { mutateAsync: connectVoiceChannel } = useConnectingVoiceChannel();
 
   const handleConnect = async () => {
     if (!channelId || channelLoading) return;
@@ -31,53 +35,50 @@ const VoiceChannel = () => {
     try {
       const ovInstance = new OpenVidu();
       setOV(ovInstance);
-      setVoiceChannel(channelId);
+      setVoiceChannel(channelId as string);
 
-      connectVoiceChannel(channelId, {
-        onSuccess: async (token) => {
-          if (!token) {
-            console.error("No token received");
-            return;
-          }
+      const token = await connectVoiceChannel(Number(channelId));
 
-          try {
-            const newSession = ovInstance.initSession();
+      const newSession = ovInstance.initSession();
 
-            newSession.on("sessionDisconnected", () => {
-              console.log("Session disconnected");
-              disconnect();
-            });
-
-            await newSession.connect(token, {
-              clientData: "MyUserName",
-              connectionId: Date.now().toString(),
-            });
-
-            const newPublisher = ovInstance.initPublisher(
-              "publisher-container",
-              {
-                publishAudio: true,
-                publishVideo: false,
-                audioSource: undefined,
-                mirror: false,
-              }
-            );
-
-            await newSession.publish(newPublisher);
-
-            setSession(newSession);
-            setPublisher(newPublisher);
-            setIsConnected(true);
-          } catch (error) {
-            console.error("Error in session initialization:", error);
-            disconnect();
-          }
-        },
-        onError: (error) => {
-          console.error("Error getting token:", error);
-          disconnect();
-        },
+      newSession.on("streamCreated", (event) => {
+        const subscriber = newSession.subscribe(event.stream, undefined);
+        setSubscribers((prev) => [...prev, subscriber]);
       });
+
+      newSession.on("streamDestroyed", (event) => {
+        setSubscribers((prev) =>
+          prev.filter((sub) => sub.stream.streamId !== event.stream.streamId)
+        );
+      });
+
+      newSession.on("sessionDisconnected", () => {
+        console.log("Session disconnected");
+        disconnect();
+      });
+      await newSession.connect(token, {
+        clientData: username,
+        connectionId: Date.now().toString(),
+      });
+
+      // 6. Publisher 초기화 및 발행
+      const newPublisher = await ovInstance.initPublisherAsync(
+        "publisher-container",
+        {
+          publishAudio: true,
+          publishVideo: true,
+          audioSource: undefined,
+          videoSource: undefined,
+          mirror: false,
+        }
+      );
+
+      await newSession.publish(newPublisher);
+
+      // 7. 상태 업데이트
+      setSession(newSession);
+      setPublisher(newPublisher);
+      setIsConnected(true);
     } catch (error) {
       console.error("Error in OpenVidu initialization:", error);
       disconnect();

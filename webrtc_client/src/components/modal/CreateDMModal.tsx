@@ -29,7 +29,7 @@ const CreateDMModal = ({ isOpen, onClose }: CreateDMModalProps) => {
 
   // data가 undefined가 아닌 것만 필터링
   const friendList = friendQueries.map((query) => query.data).filter(Boolean);
-
+  console.log(friendList);
   const handleFriendSelect = (userId: number) => {
     setSelectedFriends((prev) =>
       prev.includes(userId)
@@ -77,23 +77,30 @@ const CreateDMModal = ({ isOpen, onClose }: CreateDMModalProps) => {
               <div
                 key={friend.userId}
                 className="flex items-center space-x-3 p-2 hover:bg-[#32353b] rounded cursor-pointer"
-                onClick={() => handleFriendSelect(friend.userId)}
               >
                 <input
                   type="checkbox"
                   checked={selectedFriends.includes(friend.userId)}
-                  onChange={() => handleFriendSelect(friend.userId)}
+                  onChange={(e) => {
+                    e.stopPropagation(); // 이벤트 버블링 방지
+                    handleFriendSelect(friend.userId);
+                  }}
                   className="w-4 h-4 rounded border-none bg-[#72767d] checked:bg-[#5865f2]"
                 />
                 <div
-                  style={{ backgroundColor: friend.thumbnailColor }}
-                  className="w-8 h-8 rounded-full flex items-center justify-center"
+                  onClick={() => handleFriendSelect(friend.userId)}
+                  className="flex items-center space-x-3 flex-1"
                 >
-                  <span className="text-white text-sm">
-                    {friend.username.charAt(0).toUpperCase()}
-                  </span>
+                  <div
+                    style={{ backgroundColor: friend.thumbnailColor }}
+                    className="w-8 h-8 rounded-full flex items-center justify-center"
+                  >
+                    <span className="text-white text-sm">
+                      {friend.username.charAt(0).toUpperCase()}
+                    </span>
+                  </div>
+                  <span className="text-white">{friend.username}</span>
                 </div>
-                <span className="text-white">{friend.username}</span>
               </div>
             ))}
           </div>

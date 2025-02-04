@@ -77,25 +77,26 @@ export const removeUserFromDMChannel = async (
   }
 };
 
-export const connectingVoiceChannel = async (channelId: number) => {
+export const initializeSession = async (channelId: number) => {
   try {
     // 1. 세션 생성 - 경로 수정
     const sessionResponse = await axiosInstance.post("webrtc/sessions", {
       customSessionId: channelId.toString(), // channelId를 직접 사용
     });
-    const sessionId = sessionResponse.data;
-
-    // 2. 연결 토큰 생성 - 경로 수정
-    const connectionResponse = await axiosInstance.post(
-      `webrtc/sessions/${sessionId}/connections`,
-      {
-        // 필요한 경우 추가 connection properties를 여기에 설정
-      }
-    );
-
-    return connectionResponse.data; // token string이 반환됨
+    return sessionResponse.data;
   } catch (e) {
     console.error("Error connecting to voice channel:", e);
+    throw e;
+  }
+};
+
+export const createConnection = async (channelId: number) => {
+  try {
+    const response = await axiosInstance.post(
+      `webrtc/sessions/${channelId}/connections`
+    );
+    return response.data;
+  } catch (e) {
     throw e;
   }
 };
