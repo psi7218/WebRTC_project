@@ -6,6 +6,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import api.webrtc_server.entity.ChannelEntity;
+import api.webrtc_server.entity.ChannelEntity.ChannelType;
+import api.webrtc_server.repository.ChannelRepository;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,10 +19,12 @@ import java.util.Map;
 public class WebRtcController {
 
     private final OpenVidu openvidu;
+    private final ChannelRepository channelRepository;
 
     @Autowired
-    public WebRtcController(OpenVidu openvidu) {
+    public WebRtcController(OpenVidu openvidu, ChannelRepository channelRepository) {
         this.openvidu = openvidu;
+        this.channelRepository = channelRepository;
     }
 
     // 세션 생성
@@ -30,34 +36,39 @@ public class WebRtcController {
         return ResponseEntity.ok(session.getSessionId());
     }
 
-    @PostMapping("/sessions/{sessionId}/connections")
+    @PostMapping("/sessions/{channelId}/connections")
     public ResponseEntity<String> createConnection(
-            @PathVariable("sessionId") String sessionId,
+            @PathVariable("channelId") String channelId,
             @RequestBody(required = false) Map<String, Object> params)
             throws OpenViduJavaClientException, OpenViduHttpException {
+                
+        ChannelEntity channel = channelRepository.findById(Long.parseLong(channelId))
+        .orElseThrow(() -> new IllegalArgumentException("Channel not found"));
 
-        // 1) 먼저 getActiveSession으로 세션 조회
-        Session session = openvidu.getActiveSession(sessionId);
-
-        // 2) 세션이 없다면, 다시 생성
-        if (session == null) {
-            // 원하는 세션 속성을 지정해도 되고, 기본값으로 해도 됩니다.
-            // 여기서는 customSessionId를 sessionId로 지정
-            Map<String, Object> sessionParams = new HashMap<>();
-            sessionParams.put("customSessionId", sessionId);
-
-            // SessionProperties 만들기
-            SessionProperties sessionProperties =
-                    SessionProperties.fromJson(sessionParams).build();
-
-            // 새로운 세션 생성
-            session = openvidu.createSession(sessionProperties);
+        if (channel.getChannelType() != ChannelType.VOICE) {
+            throw new IllegalArgumentException("Not a voice channel");
         }
 
-        // 3) Connection(토큰) 생성
-        ConnectionProperties properties = ConnectionProperties.fromJson(params).build();
-        Connection connection = session.createConnection(properties);
+        // 2) 세션이 없다면, 다시 생성
+        try {
+            // 2. 기존 활성 세션이 있는지 확인
+            Session session = openvidu.getActiveSession(channelId);
 
-        return ResponseEntity.ok(connection.getToken());
+            // 3. 없으면 새로 생성
+            if (session == null) {
+                SessionProperties properties = SessionProperties.fromJson(params).build();
+                session = openvidu.createSession(properties);
+            }
+
+
+            // 4. 커넥션(토큰) 생성
+            ConnectionProperties properties = ConnectionProperties.fromJson(params).build();
+            Connection connection = session.createConnection(properties);
+
+            return ResponseEntity.ok(connection.getToken());
+            
+        } catch (OpenViduJavaClientException | OpenViduHttpException e) {
+            throw new RuntimeException("Failed to create connection", e);
+        }
     }
 }

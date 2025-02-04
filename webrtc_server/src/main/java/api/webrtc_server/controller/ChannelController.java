@@ -88,7 +88,7 @@ public class ChannelController {
         ServerEntity server = serverRepository.findById(serverId)
                 .orElseThrow(() -> new IllegalArgumentException("Server not found with ID: " + serverId));
 
-        // 2) DB에 ChannelEntity 생성 (channelType=VOICE)
+        // 2) DB에 ChannelEntity 생성
         ChannelEntity channel = new ChannelEntity();
         channel.setServer(server);
         channel.setChannelName(channelDTO.getChannelName());
@@ -101,24 +101,10 @@ public class ChannelController {
 
         channel = channelRepository.save(channel); // DB에 저장 -> channelId 할당
 
-        // 3) OpenVidu 세션 생성 (customSessionId = channelId)
-        String customSessionId = channel.getChannelId().toString();
-
-        Map<String, Object> sessionParams = new HashMap<>();
-        sessionParams.put("customSessionId", customSessionId);
-
-        try {
-            SessionProperties props = SessionProperties.fromJson(sessionParams).build();
-            openvidu.createSession(props);
-            // 반환값 session.getSessionId()가 굳이 필요 없으면 무시
-        } catch (OpenViduJavaClientException | OpenViduHttpException e) {
-            throw new RuntimeException("OpenVidu session creation failed", e);
-        }
-
         // 4) 응답으로 channelId만 반환
         Map<String, Object> response = new HashMap<>();
         response.put("channelId", channel.getChannelId());
-        response.put("message", "Voice channel created with OpenVidu session ID=" + customSessionId);
+        response.put("message", "Voice channel created");
 
         return ResponseEntity.ok(response);
     }
