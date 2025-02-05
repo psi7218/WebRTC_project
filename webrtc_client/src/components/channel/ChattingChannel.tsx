@@ -2,7 +2,6 @@ import { Hash } from "lucide-react";
 import ChatInput from "../chatting/ChatInput";
 import useWebSocket from "@/hooks/custom/useWebSocket";
 import MessageList from "../chatting/MessageList";
-import { useState, useRef, useEffect } from "react";
 import { useWebSocketStore } from "@/store/useWebSocketStore";
 
 const ChattingChannel = ({ channelInfo }) => {
