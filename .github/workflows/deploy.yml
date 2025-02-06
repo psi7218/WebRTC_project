@@ -47,4 +47,7 @@ jobs:
           script: |
             cd /opt/openvidu
             docker-compose pull
-            ./openvidu restart
+            nohup ./openvidu restart > restart.log 2>&1 &
+            sleep 30
+            cat restart.log
+            docker ps
