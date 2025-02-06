@@ -1,6 +1,19 @@
 version: "3.8"
 
 services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: webrtc_db
+      MYSQL_USER: root
+      MYSQL_PASSWORD: qkrtjddls@55
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
   frontend:
     build:
       context: ./webrtc_client
@@ -23,3 +36,6 @@ services:
       - "8080:8080"
     environment:
       - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/webrtc_db?useSSL=false&serverTimezone=UTC
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=qkrtjddls@55
