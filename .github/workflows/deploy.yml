@@ -46,8 +46,5 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             cd /opt/openvidu
-            docker-compose pull
-            nohup ./openvidu restart > restart.log 2>&1 &
-            sleep 30
-            cat restart.log
-            docker ps
+            sudo /usr/local/bin/docker-compose pull
+            sudo ./openvidu restart
