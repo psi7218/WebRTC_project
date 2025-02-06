@@ -45,9 +45,9 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            echo "Checking .env file..."
-            ls -la /opt/openvidu/.env
-            echo "Starting deployment..."
             cd /opt/openvidu
-            sudo /usr/local/bin/docker-compose pull
-            sudo -E ./openvidu restart
+            sudo docker pull psi7218/webrtc-frontend:latest
+            sudo docker pull psi7218/webrtc-backend:latest
+            sudo systemctl restart docker # Docker 서비스 재시작
+            sudo ./openvidu stop  # 기존 서비스 중지
+            sudo ./openvidu start  # 새로운 이미지로 시작
