@@ -6,18 +6,19 @@ FROM node:20.14.0 AS base
 # Step 2: Dependencies
 FROM base AS deps
 WORKDIR /app
-COPY ./webrtc_client/package.json ./package.json
-COPY ./webrtc_client/package-lock.json ./package-lock.json
+COPY package.json ./package.json
+COPY package-lock.json ./package-lock.json
 RUN npm ci
 
 # Step 3: Builder
 FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
-COPY ./webrtc_client/ ./
+COPY . .
 
 # Environment variables for build time
 ENV NEXT_PUBLIC_API_URL=https://thiscord.store/api
+ENV PORT=5442
 
 # Build the application
 RUN npm run build
