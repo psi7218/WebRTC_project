@@ -13,7 +13,7 @@ const VoiceConnectingDiv = () => {
   const currentUserId = useUserStore((state) => state.userId);
   const currentUsername = useUserStore((state) => state.username);
   const { publisher, subscribers } = useCurrentVoiceChannel();
-
+  console.log(publisher);
   // 참가자 목록 상태
   const [participants, setParticipants] = useState<Participant[]>([]);
   const [showVideoSettings, setShowVideoSettings] = useState(false);
@@ -23,10 +23,10 @@ const VoiceConnectingDiv = () => {
   useEffect(() => {
     const allParticipants: Participant[] = [];
 
-    // 자신을 참가자 목록에 추가
+    // 퍼블리셔(자신) 참가자 추가 시, connection id를 사용
     if (publisher) {
       allParticipants.push({
-        id: String(currentUserId),
+        id: publisher.stream.connection.connectionId,
         name: currentUsername,
         isMuted: !publisher.stream.audioActive,
         streamManager: publisher,
@@ -35,7 +35,6 @@ const VoiceConnectingDiv = () => {
 
     // 다른 참가자들 추가
     subscribers.forEach((subscriber) => {
-      // connection.data에서 참가자 정보 파싱
       const connectionData = JSON.parse(subscriber.stream.connection.data);
       allParticipants.push({
         id: subscriber.stream.connection.connectionId,
@@ -48,6 +47,8 @@ const VoiceConnectingDiv = () => {
     setParticipants(allParticipants);
   }, [publisher, subscribers, currentUserId, currentUsername]);
 
+  console.log(participants);
+  console.log(currentUserId);
   // 비디오 활성화/비활성화 처리
   const handleShowVideo = async () => {
     if (publisher) {
