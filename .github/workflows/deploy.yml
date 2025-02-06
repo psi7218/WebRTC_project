@@ -45,6 +45,9 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
+            echo "Checking .env file..."
+            ls -la /opt/openvidu/.env
+            echo "Starting deployment..."
             cd /opt/openvidu
             sudo /usr/local/bin/docker-compose pull
-            sudo ./openvidu restart
+            sudo -E ./openvidu restart
