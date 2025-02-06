@@ -141,7 +141,7 @@ const VoiceConnectingDiv = () => {
                     </div>
                   )}
 
-                {/* 참가자 정보 오버레이 */}
+                {/* 참가자 정보 overlay */}
                 <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/70 to-transparent">
                   <div className="flex items-center space-x-3">
                     <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center">
