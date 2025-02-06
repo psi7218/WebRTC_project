@@ -34,6 +34,7 @@ jobs:
       - name: Build Spring Boot Project
         run: |
           cd webrtc_server
+          chmod +x gradlew
           ./gradlew build -x test
 
       - name: Build and push Docker images
