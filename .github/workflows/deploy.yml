@@ -14,11 +14,11 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Check directory structure
-      run: |
-        pwd
-        ls -la
-        ls -la webrtc_client
-        ls -la webrtc_server
+        run: |
+          pwd
+          ls -la
+          ls -la webrtc_client
+          ls -la webrtc_server
 
       - name: Install Docker Compose
         run: |
