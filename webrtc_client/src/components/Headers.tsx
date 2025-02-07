@@ -92,6 +92,7 @@ const Header = () => {
           />
           <div className="flex items-center">
             <button
+              type="button"
               data-testid="modal-login-btn"
               className="px-4 py-2 rounded"
               onClick={handlelogin}
