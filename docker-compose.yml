@@ -39,3 +39,6 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/webrtc_db?useSSL=false&serverTimezone=UTC
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=qkrtjddls@55
+
+volumes:
+  mysql_data:
