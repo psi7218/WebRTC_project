@@ -54,6 +54,9 @@ jobs:
             sudo docker pull psi7218/webrtc-frontend:latest
             sudo docker pull psi7218/webrtc-backend:latest
 
-            sudo systemctl restart docker # Docker 서비스 재시작.
-            sudo ./openvidu stop  # 기존 서비스 중지
-            sudo ./openvidu start  # 새로운 이미지로 시작
+            (sudo ./openvidu restart > /dev/null 2>&1 &)
+            echo "Deployment initiated successfully"
+
+            # sudo systemctl restart docker # Docker 서비스 재시작.
+            # sudo ./openvidu stop  # 기존 서비스 중지
+            # sudo ./openvidu start  # 새로운 이미지로 시작
