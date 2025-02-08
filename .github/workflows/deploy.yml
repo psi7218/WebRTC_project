@@ -50,15 +50,16 @@ jobs:
 
             ./openvidu stop
 
+            while pgrep nginx > /dev/null; do
+              sleep 1
+            done
+
             sudo docker rmi psi7218/webrtc-frontend:latest
             sudo docker rmi psi7218/webrtc-backend:latest
 
             sudo docker pull psi7218/webrtc-frontend:latest
             sudo docker pull psi7218/webrtc-backend:latest
 
-            (sudo ./openvidu restart > /dev/null 2>&1 &)
-            echo "Deployment initiated successfully"
+            sudo ./openvidu start
 
-            # sudo systemctl restart docker # Docker 서비스 재시작
-            # sudo ./openvidu stop  # 기존 서비스 중지.
-            # sudo ./openvidu start  # 새로운 이미지로 시작
+            echo "Deployment initiated successfully"
