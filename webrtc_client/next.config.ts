@@ -2,17 +2,13 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   /* config options here */
-  images: {
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "ifh.cc",
-        port: "",
-        pathname: "/**",
-      },
-    ],
-  },
   output: "standalone",
+
+  server: {
+    hostname: "0.0.0.0",
+    port: 5442,
+  },
+
   eslint: {
     ignoreDuringBuilds: true, // 빌드 중 린트 에러 무시
   },
