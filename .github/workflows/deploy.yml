@@ -49,10 +49,7 @@ jobs:
             cd /opt/openvidu
 
             ./openvidu stop
-            sudo systemctl stop nginx || true
 
-            sudo pkill -f nginx || true
-            sudo docker container prune -f
 
             sudo docker rmi -f psi7218/webrtc-frontend:latest
             sudo docker rmi -f psi7218/webrtc-backend:latest
