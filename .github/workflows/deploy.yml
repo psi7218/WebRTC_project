@@ -62,4 +62,4 @@ jobs:
 
             sudo ./openvidu start
 
-            echo "Deployment initiated successfully"
+            echo "Deployment initiated successfully."
