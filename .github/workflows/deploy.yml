@@ -50,13 +50,12 @@ jobs:
 
             ./openvidu stop
 
-
-            sudo docker rmi -f psi7218/webrtc-frontend:latest
-            sudo docker rmi -f psi7218/webrtc-backend:latest
+            sudo docker rmi psi7218/webrtc-frontend:latest || true
+            sudo docker rmi psi7218/webrtc-backend:latest || true
 
             sudo docker pull psi7218/webrtc-frontend:latest
             sudo docker pull psi7218/webrtc-backend:latest
 
-            sudo ./openvidu start
+            (sudo ./openvidu restart > /dev/null 2>&1 &)
 
             echo "Deployment initiated successfully."
