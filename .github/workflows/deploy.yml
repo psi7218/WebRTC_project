@@ -48,8 +48,10 @@ jobs:
           script: |
             cd /opt/openvidu
 
-            sudo docker rmi psi7218/webrtc-frontend:latest || true
-            sudo docker rmi psi7218/webrtc-backend:latest || true
+            ./openvidu stop
+
+            sudo docker rmi psi7218/webrtc-frontend:latest
+            sudo docker rmi psi7218/webrtc-backend:latest
 
             sudo docker pull psi7218/webrtc-frontend:latest
             sudo docker pull psi7218/webrtc-backend:latest
