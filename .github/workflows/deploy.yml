@@ -49,7 +49,7 @@ jobs:
             cd /opt/openvidu
 
             ./openvidu stop
-
+            sudo pkill -f nginx || true
             while pgrep nginx > /dev/null; do
               sleep 1
             done
