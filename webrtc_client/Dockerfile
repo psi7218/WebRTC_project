@@ -24,7 +24,7 @@ FROM node:20.14.0 AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
-ENV PORT=5442  
+ENV PORT=3000
 # OpenVidu 연동을 위한 포트
 
 # Copy necessary files

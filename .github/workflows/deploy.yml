@@ -57,9 +57,11 @@ jobs:
 
             sudo ./openvidu stop
 
+            sudo docker rmi mysql:8.0
             sudo docker rmi psi7218/webrtc-frontend:latest 
             sudo docker rmi psi7218/webrtc-backend:latest 
 
+            sudo docker pull mysql:8.0
             sudo docker pull psi7218/webrtc-frontend:latest
             sudo docker pull psi7218/webrtc-backend:latest
 
