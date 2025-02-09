@@ -32,7 +32,7 @@ COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/static ./.next/static
 COPY --from=builder /app/.next/standalone ./
 
-EXPOSE 5442
+EXPOSE 3000
 
 # Start the application
 CMD ["node", "server.js"]
