@@ -6,14 +6,32 @@ services:
     container_name: mysql
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: webrtc_db
-      MYSQL_USER: root
-      MYSQL_PASSWORD: qkrtjddls@55
+
     ports:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+
+  backend:
+    build:
+      context: ./webrtc_server
+      dockerfile: Dockerfile
+    image: psi7218/webrtc-backend:latest
+    container_name: webrtc-backend
+    ports:
+      - "8080:8080"
+
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/webrtc_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC&characterEncoding=UTF-8
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=${MYSQL_ROOT_PASSWORD}
+    depends_on:
+      mysql:
+        condition: service_healthy
+
   frontend:
     build:
       context: ./webrtc_client
@@ -24,21 +42,9 @@ services:
       - "5442:5442"
     environment:
       - NODE_ENV=production
-      - NEXT_PUBLIC_API_URL=https://thiscord.store/api
-
-  backend:
-    build:
-      context: ./webrtc_server
-      dockerfile: Dockerfile
-    image: psi7218/webrtc-backend:latest
-    container_name: webrtc-backend
-    ports:
-      - "8080:8080"
-    environment:
-      - SPRING_PROFILES_ACTIVE=prod
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/webrtc_db?useSSL=false&serverTimezone=UTC
-      - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=qkrtjddls@55
+      - NEXT_PUBLIC_API_URL=http://backend:8080/api/
+    depends_on:
+      - backend
 
 volumes:
   mysql_data:

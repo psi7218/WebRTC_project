@@ -16,10 +16,6 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Environment variables for build time
-ENV NEXT_PUBLIC_API_URL=/api
-ENV PORT=5442
-
 # Build the application
 RUN npm run build
 
@@ -28,7 +24,6 @@ FROM node:20.14.0 AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
-ENV NEXT_PUBLIC_API_URL=/api 
 ENV PORT=5442  
 # OpenVidu 연동을 위한 포트
 
