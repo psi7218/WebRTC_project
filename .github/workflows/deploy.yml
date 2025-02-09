@@ -53,7 +53,7 @@ jobs:
 
           script: |
             cd /opt/openvidu
-            echo "MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}" > .env
+            echo "MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}" > .env.db
 
             sudo ./openvidu stop
 
