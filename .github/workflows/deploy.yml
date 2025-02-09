@@ -67,4 +67,4 @@ jobs:
 
             (sudo ./openvidu restart > /dev/null 2>&1 &)
 
-            echo "Deployment initiated successfully."
+            echo "Deployment initiated successfully.."
