@@ -91,6 +91,7 @@ public class UserController {
         // 이메일로 사용자 조회
         UserEntity user = userRepository.findByEmail(loginRequest.getEmail());
 
+
         if (user == null) {
             // email이 없으면 예외 (혹은 null 반환, status 401 등)
             throw new RuntimeException("User not found");
