@@ -53,6 +53,7 @@ jobs:
 
           script: |
             cd /opt/openvidu
+            sudo su
             echo "MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}" > .env.db
 
             echo "Debug: .env.db 내용은 다음과 같습니다:"
