@@ -5,6 +5,9 @@ import MessageList from "../chatting/MessageList";
 import { useWebSocketStore } from "@/store/useWebSocketStore";
 
 const ChattingChannel = ({ channelInfo }) => {
+  console.log(process.env.NEXT_PUBLIC_WS_URL);
+  console.log(channelInfo.channelId);
+
   useWebSocket(channelInfo?.channelId);
   const channelId = useWebSocketStore((state) => state.channelId);
   const stompClient = useWebSocketStore((state) => state.stompClient);
