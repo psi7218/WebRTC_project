@@ -25,7 +25,9 @@ export const useWebSocketStore = create<WebSocketStore>((set, get) => ({
       return { ...state, channelId };
     });
 
-    const client = Stomp.over(() => new WebSocket("ws://localhost:8080/ws"));
+    const client = Stomp.over(
+      () => new WebSocket(process.env.NEXT_PUBLIC_WS_URL as string)
+    );
     client.connect(
       {},
       () => {
