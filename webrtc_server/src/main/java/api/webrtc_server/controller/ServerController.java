@@ -47,10 +47,14 @@ public class ServerController {
     @PostMapping
     public ResponseEntity<ServerDTO> createServer(@RequestBody CreateServerDTO createServerDTO) {
         try {
+
+            System.out.println("Starting server creation process...");
+            System.out.println("CreateServerDTO: " + createServerDTO);
             // 관리자 사용자 찾기
             UserEntity serverAdmin = userRepository.findById(createServerDTO.getServerAdminId())
                     .orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + createServerDTO.getServerAdminId()));
-
+            System.out.println("serverAdmin: " + serverAdmin);
+                
             // 새 서버 엔티티 생성
             ServerEntity server = new ServerEntity();
             server.setServerName(createServerDTO.getServerName());
@@ -61,7 +65,7 @@ public class ServerController {
 
             // 기본 채널 리스트 생성
             List<ChannelEntity> defaultChannels = new ArrayList<>();
-
+            System.out.println("채팅채널 생성");
             // 일반 채팅 채널 생성
             ChannelEntity chattingChannel = new ChannelEntity();
             chattingChannel.setChannelName("일반");
@@ -79,13 +83,16 @@ public class ServerController {
             voiceChannel.setServer(server);
             voiceChannel.setUserId(serverAdmin.getUserId());
             defaultChannels.add(voiceChannel);
-
+            System.out.println("음성채널 생성");
             // 서버에 채널 리스트 설정
             voiceChannel = channelRepository.save(voiceChannel);
 
             if (voiceChannel.getChannelType() == ChannelEntity.ChannelType.VOICE) {
                 try {
                     String sessionId = voiceChannel.getChannelId().toString(); // channelId를 sessionId로 사용
+                    System.out.println("Attempting to create OpenVidu session with ID: " + sessionId);
+                    System.out.println("OpenVidu URL: " + openVidu.toString());
+                    
                     SessionProperties props = new SessionProperties.Builder()
                             .customSessionId(sessionId) // channelId를 세션 ID로 사용
                             .build();
