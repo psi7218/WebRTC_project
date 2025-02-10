@@ -6,7 +6,7 @@ COPY ./build/libs/*.jar app.jar
 
 ENV SERVER_PORT=8080
 ENV SPRING_PROFILES_ACTIVE=prod
-ENV OPENVIDU_URL=https://localhost:5443/
+ENV OPENVIDU_URL=http://localhost:5443/
 ENV OPENVIDU_SECRET=THISCORD
 
 
