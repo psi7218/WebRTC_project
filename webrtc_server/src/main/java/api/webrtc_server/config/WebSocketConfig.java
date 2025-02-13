@@ -22,6 +22,5 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         // WebSocket 연결 엔드포인트 설정, 추후에 allowedOrigin은 수정해야됨
         registry.addEndpoint("/ws").setAllowedOrigins("*");
-        registry.addEndpoint("/wss").setAllowedOrigins("*");
     }
 }
