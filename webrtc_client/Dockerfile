@@ -33,6 +33,9 @@ ENV NODE_ENV=production
 ENV PORT=3000
 # OpenVidu 연동을 위한 포트
 
+ENV NEXT_PUBLIC_WS_URL=$NEXT_PUBLIC_WS_URL
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+
 # Copy necessary files
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/static ./.next/static
