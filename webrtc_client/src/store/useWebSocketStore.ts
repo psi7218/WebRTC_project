@@ -25,9 +25,14 @@ export const useWebSocketStore = create<WebSocketStore>((set, get) => ({
       return { ...state, channelId };
     });
 
-    const client = Stomp.over(
-      () => new WebSocket(process.env.NEXT_PUBLIC_WS_URL as string)
-    );
+    const wsUrl = process.env.NEXT_PUBLIC_WS_URL as string;
+    console.log("Attempting WebSocket connection to:", wsUrl);
+
+    const client = Stomp.over(() => {
+      const ws = new WebSocket(wsUrl);
+      console.log("Created WebSocket with URL:", ws.url);
+      return ws;
+    });
     client.connect(
       {},
       () => {
