@@ -29,7 +29,7 @@ const CreateDMModal = ({ isOpen, onClose }: CreateDMModalProps) => {
 
   // data가 undefined가 아닌 것만 필터링
   const friendList = friendQueries.map((query) => query.data).filter(Boolean);
-  console.log(friendList);
+
   const handleFriendSelect = (userId: number) => {
     setSelectedFriends((prev) =>
       prev.includes(userId)

@@ -40,6 +40,7 @@ export const useWebSocketStore = create<WebSocketStore>((set, get) => ({
         });
       },
       (error) => {
+        console.log(error);
         set((state) => ({ ...state, isConnected: false }));
       }
     );

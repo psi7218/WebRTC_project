@@ -22,7 +22,6 @@ const Lobby = () => {
     .map((query) => query.data)
     .filter(Boolean); // data가 undefined가 아닌 것만 필터링
 
-  console.log(channelDataList);
   const gotoDMDialog = (channelId: number) => {
     router.push(`/channels/me/${channelId}`);
   };

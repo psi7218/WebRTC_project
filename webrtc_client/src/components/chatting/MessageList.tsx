@@ -8,7 +8,7 @@ import { useMessages } from "@/hooks/queries/messages/useMessages";
 const MessageList = ({ channelId, stompClient }) => {
   const userId = useUserStore((state) => state.userId);
   const username = useUserStore((state) => state.username);
-  // const thumbnailColor = useUserStore((state) => state.thumbnailColor);
+
   const { messages, isLoading, updateMessagesCache } = useMessages(channelId);
   const messageEndRef = useRef(null);
 
