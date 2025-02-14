@@ -30,3 +30,5 @@ export interface MessageProps {
   content: string;
   createdAt: string;
 }
+
+export interface Channel {}

@@ -39,6 +39,7 @@ services:
       args:
         NEXT_PUBLIC_API_URL: https://thiscord.store/api/
         NEXT_PUBLIC_WS_URL: wss://thiscord.store/ws
+
     image: psi7218/webrtc-frontend:latest
     container_name: webrtc-frontend
     ports:
