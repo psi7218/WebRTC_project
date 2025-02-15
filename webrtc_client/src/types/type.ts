@@ -32,3 +32,7 @@ export interface MessageProps {
 }
 
 export interface Channel {}
+
+export interface Servel {}
+
+export interface User {}
