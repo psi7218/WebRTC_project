@@ -36,3 +36,5 @@ export interface Channel {}
 export interface Servel {}
 
 export interface User {}
+
+export interface Friend {}
