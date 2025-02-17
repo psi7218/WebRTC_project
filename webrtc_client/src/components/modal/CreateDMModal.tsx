@@ -6,6 +6,32 @@ import { useUserStore } from "@/store/useUserStore";
 import { useGetFriends } from "@/hooks/queries/users/useUsers";
 import { getUserById } from "@/apis/users/userApi";
 
+const formatChannelName = (
+  selectedFriends: Friend[]
+): { displayName: string; memberCount: string } => {
+  if (selectedFriends.length === 1) {
+    // 1:1 DM - just show the other person's username
+    return {
+      displayName: selectedFriends[0].username,
+      memberCount: "",
+    };
+  }
+
+  // Group DM - combine usernames with comma
+  const names = selectedFriends.map((friend) => friend.username);
+  let displayName = names.join(", ");
+
+  // Truncate if too long (keeping space for ellipsis)
+  if (displayName.length > 30) {
+    displayName = displayName.substring(0, 27) + "...";
+  }
+
+  // Add member count
+  const memberCount = `${selectedFriends.length + 1}명`;
+
+  return { displayName, memberCount };
+};
+
 interface CreateDMModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -31,6 +57,9 @@ const CreateDMModal = ({ isOpen, onClose }: CreateDMModalProps) => {
   const friendList = friendQueries.map((query) => query.data).filter(Boolean);
 
   const handleFriendSelect = (userId: number) => {
+    if (selectedFriends.length >= 3 && !selectedFriends.includes(userId)) {
+      return;
+    }
     setSelectedFriends((prev) =>
       prev.includes(userId)
         ? prev.filter((id) => id !== userId)
@@ -41,8 +70,13 @@ const CreateDMModal = ({ isOpen, onClose }: CreateDMModalProps) => {
   const handleCreateDM = async () => {
     try {
       if (selectedFriends.length > 0) {
+        const selectedFriendObjects = friendList.filter((friend) =>
+          selectedFriends.includes(friend.userId)
+        );
+        const { displayName } = formatChannelName(selectedFriendObjects);
+
         // 현재 사용자의 ID로 채널을 생성하고, 선택된 친구들을 참가자로 추가
-        await createDMChannel(currentUserId, selectedFriends);
+        await createDMChannel(currentUserId, selectedFriends, displayName);
 
         // 현재 사용자의 정보를 다시 가져와서 participatingChannelIds 업데이트
         const userData = await getUserById(currentUserId);
