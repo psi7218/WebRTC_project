@@ -7,7 +7,7 @@ const StackedThumbnails = ({ participants }) => {
   // 1) 데이터 가공
 
   const others = participants.filter((p) => p.userId !== userId);
-
+  console.log(others);
   // 2) 만약 한 명도 없다면(=혼자만 있는 채널)
   if (others.length === 0) {
     return <div className="text-gray-500">나 혼자 있는 그룹</div>;

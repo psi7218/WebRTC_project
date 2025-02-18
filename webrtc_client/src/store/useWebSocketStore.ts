@@ -26,10 +26,6 @@ export const useWebSocketStore = create<WebSocketStore>((set, get) => ({
     });
 
     const wsUrl = process.env.NEXT_PUBLIC_WS_URL;
-    console.log("Attempting WebSocket connection to:", wsUrl);
-
-    console.log("WS URL type:", typeof wsUrl);
-    console.log("WS URL value:", wsUrl);
 
     if (!wsUrl) {
       console.error("WebSocket URL is not defined!");
@@ -38,7 +34,6 @@ export const useWebSocketStore = create<WebSocketStore>((set, get) => ({
 
     const client = Stomp.over(() => {
       const ws = new WebSocket(wsUrl);
-      console.log("Created WebSocket with URL:", ws.url);
       return ws;
     });
     client.connect(

@@ -9,6 +9,7 @@ import { useChannels } from "@/hooks/queries/channels/useChannels";
 import { useLeaveChannel } from "@/hooks/mutations/channels/useLeaveChannel";
 import clsx from "clsx";
 import CreateDMModal from "./modal/CreateDMModal";
+import StackedThumbnails from "./ui/StackedThumbnails";
 
 const Lobby = () => {
   const router = useRouter();
@@ -75,6 +76,11 @@ const Lobby = () => {
           const isActive = channel.channelId === Number(currentDMChannelId);
           const isHovered = channel.channelId === hoveredChannelId;
 
+          const participants = channel.participantIds.map((id) => ({
+            userId: id,
+            thumbnailColor: channel.logo_color, // 각 참여자의 썸네일 색상
+          }));
+
           return (
             <div
               key={channel.channelId}
@@ -92,6 +98,7 @@ const Lobby = () => {
                   logo_color={channel.logo_color}
                   thumbnail={channel.thumbnail}
                 />
+                {/* <StackedThumbnails participants={participants} /> */}
                 <span className="flex justify-center items-center">
                   <p>{channel.channelName}</p>
                 </span>

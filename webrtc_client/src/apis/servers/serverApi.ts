@@ -1,3 +1,4 @@
+import axios from "axios";
 import axiosInstance from "../instance/axiosInstance";
 
 interface serverDataProps {
@@ -44,6 +45,40 @@ export const deleteServer = async (serverId: number) => {
 export const getServerById = async (serverId: number) => {
   try {
     const response = await axiosInstance.get(`servers/${serverId}`);
+    return response.data;
+  } catch (e) {
+    throw e;
+  }
+};
+
+export const subscribeToServerEvents = async (userId: number) => {
+  try {
+    const response = await axiosInstance.get(`servers/subscribe/${userId}`);
+    return response.data;
+  } catch (e) {
+    throw e;
+  }
+};
+
+export const inviteUserToServer = async (userId: number, serverId: number) => {
+  try {
+    const response = await axiosInstance.post(
+      `servers/${serverId}/invite/${userId}`
+    );
+    return response.data;
+  } catch (e) {
+    throw e;
+  }
+};
+
+export const acceptServerInvitation = async (
+  userId: number,
+  serverId: number
+) => {
+  try {
+    const response = await axiosInstance.post(
+      `servers/${serverId}/accept/${userId}`
+    );
     return response.data;
   } catch (e) {
     throw e;

@@ -5,6 +5,7 @@ import { useState } from "react";
 import { login } from "@/apis/auth/authApi";
 import { useUserStore } from "@/store/useUserStore";
 import SignUpModal from "./modal/SignUpModal";
+import { Bell } from "lucide-react";
 
 const Header = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -29,7 +30,7 @@ const Header = () => {
       email: typedEmail,
       password: String(typedPassword),
     });
-    console.log(response);
+
     setUserId(response["userId"]);
     setEmail(response["email"]);
     setFriendIds(response["friendIds"]);
@@ -54,10 +55,12 @@ const Header = () => {
   return (
     <header className="h-[5%] bg-[#202225] flex items-center justify-between px-4 text-white">
       <h1 className="text-lg font-bold">Discord Clone</h1>
+
       <div>
         {userId !== -1 ? (
-          <div className="flex gap-3">
-            <button onClick={handleLogOut}>logout</button>
+          <div className="flex gap-10">
+            <Bell />
+            <button onClick={handleLogOut}>LOGOUT</button>
           </div>
         ) : (
           <div>

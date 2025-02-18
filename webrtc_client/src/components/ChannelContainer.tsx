@@ -3,17 +3,19 @@ import ChannelDiv from "./ChannelDiv";
 import { useChannelsByServerId } from "@/hooks/queries/channels/useChannels";
 import { useWebSocketStore } from "@/store/useWebSocketStore";
 import useCurrentTabStore from "@/store/useCurrentTabStore";
+import { useState } from "react";
+import { ChevronDown, X } from "lucide-react";
+import InvitingModal from "./modal/InvitingModal";
 
 const ChannelContainer = () => {
+  const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
+  const [isInviteModalOpen, setIsInviteModalOpen] = useState<boolean>(false);
   const params = useParams();
   const router = useRouter();
   const serverId = params["serverId"];
 
   const { data: channelList } = useChannelsByServerId(Number(serverId));
   const currentServer = useCurrentTabStore((state) => state.currentServer);
-  const currentViewingTab = useCurrentTabStore(
-    (state) => state.currentViewingTab
-  );
 
   const { updateChannelId } = useWebSocketStore();
 
@@ -34,11 +36,40 @@ const ChannelContainer = () => {
     updateChannelId(channelId);
     router.push(`/channels/${currentServer?.serverId}/${channelId}`);
   };
+  const handleInvite = () => {
+    setIsInviteModalOpen(true);
+    setIsDropdownOpen(false);
+  };
+
   return (
     <>
-      <div className="text-white w-full h-8 flex items-center pl-2">
-        <h1> {currentServer?.serverName}</h1>
+      <div className="relative">
+        <div
+          className="text-white w-full h-8 flex items-center pl-2 justify-between pr-2 cursor-pointer hover:bg-[#35373C]"
+          onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+        >
+          <h1>{currentServer?.serverName}</h1>
+          <button className="text-gray-400 hover:text-white ">
+            {isDropdownOpen ? (
+              <X className="w-4 h-4" />
+            ) : (
+              <ChevronDown className="w-4 h-4" />
+            )}
+          </button>
+        </div>
+
+        {isDropdownOpen && (
+          <div className="absolute w-48 bg-[#1E1F22] rounded-md shadow-lg mt-1 right-2 px-2 py-1 z-10">
+            <button
+              onClick={handleInvite}
+              className="w-full px-4 py-2 text-sm text-gray-300 hover:bg-[#5865F2] text-left rounded-md"
+            >
+              서버로 초대하기
+            </button>
+          </div>
+        )}
       </div>
+
       <div className="-mx-2">
         <hr className="my-2 border-t border-black w-full" />
       </div>
@@ -54,6 +85,10 @@ const ChannelContainer = () => {
           channelType="VOICE"
         />
       </div>
+      <InvitingModal
+        isOpen={isInviteModalOpen}
+        onClose={() => setIsInviteModalOpen(false)}
+      />
     </>
   );
 };
