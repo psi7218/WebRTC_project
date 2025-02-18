@@ -1,5 +1,6 @@
 package api.webrtc_server.controller;
 
+import api.webrtc_server.config.NotificationConfig;
 import api.webrtc_server.dto.ChannelDTO;
 import api.webrtc_server.dto.CreateServerDTO;
 import api.webrtc_server.dto.ServerDTO;
@@ -19,11 +20,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -267,4 +266,89 @@ public class ServerController {
         }
     }
 
+    // ServerController에 주입 추가
+    @Autowired
+    private NotificationConfig notificationConfig;
+
+    // 구독 엔드포인트 추가
+    @GetMapping("/subscribe/{userId}")
+    @ResponseBody
+    public SseEmitter subscribeToServerEvents(@PathVariable Long userId) {
+        return notificationConfig.subscribe(userId);
+    }
+
+    // 초대하기 로직 수정
+    @PostMapping("/{serverId}/invite/{userId}")
+    public ResponseEntity<?> inviteUserToServer(
+            @PathVariable Long serverId,
+            @PathVariable Long userId) {
+        try {
+            // 서버 존재 확인
+            ServerEntity server = serverRepository.findById(serverId)
+                    .orElseThrow(() -> new IllegalArgumentException("Server not found with ID: " + serverId));
+
+            // 초대받을 유저 존재 확인
+            UserEntity user = userRepository.findById(userId)
+                    .orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + userId));
+
+            // 알림 데이터 생성
+            Map<String, Object> notificationData = new HashMap<>();
+            notificationData.put("type", "SERVER_INVITE");
+            notificationData.put("serverId", serverId);
+            notificationData.put("serverName", server.getServerName());
+            notificationData.put("invitedBy", server.getServerAdmin().getUserId());
+
+            // SSE를 통해 알림 전송
+            notificationConfig.sendNotification(userId, notificationData);
+
+            return ResponseEntity.ok()
+                    .body(Collections.singletonMap("message", "Invitation sent to user: " + userId));
+
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Collections.singletonMap("error", e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Collections.singletonMap("error", "Error sending invitation: " + e.getMessage()));
+        }
+    }
+
+    // 초대 수락 로직 수정
+    @PostMapping("/{serverId}/accept/{userId}")
+    public ResponseEntity<?> acceptServerInvitation(
+            @PathVariable Long serverId,
+            @PathVariable Long userId) {
+        try {
+            // 서버 존재 확인
+            ServerEntity server = serverRepository.findById(serverId)
+                    .orElseThrow(() -> new IllegalArgumentException("Server not found with ID: " + serverId));
+
+            // 유저 존재 확인
+            UserEntity user = userRepository.findById(userId)
+                    .orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + userId));
+
+            // UserEntity에 서버 추가 로직 필요하면 여기에 구현
+            // TODO: user.addServer(server) 같은 메서드 호출
+
+            // 수락 완료 알림 전송
+            Map<String, Object> notificationData = new HashMap<>();
+            notificationData.put("type", "SERVER_INVITE_ACCEPTED");
+            notificationData.put("serverId", serverId);
+            notificationData.put("serverName", server.getServerName());
+            notificationData.put("acceptedBy", userId);
+
+            // 서버 관리자에게 알림 전송
+            notificationConfig.sendNotification(server.getServerAdmin().getUserId(), notificationData);
+
+            return ResponseEntity.ok()
+                    .body(Collections.singletonMap("message", "User " + userId + " joined server " + serverId));
+
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Collections.singletonMap("error", e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Collections.singletonMap("error", "Error accepting invitation: " + e.getMessage()));
+        }
+    }
 }
