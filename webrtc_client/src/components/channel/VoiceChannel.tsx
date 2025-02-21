@@ -75,7 +75,6 @@ const VoiceChannel = () => {
 
       await newSession.publish(newPublisher);
 
-      // 7. 상태 업데이트
       setSession(newSession);
       setPublisher(newPublisher);
       setIsConnected(true);
@@ -85,7 +84,6 @@ const VoiceChannel = () => {
     }
   };
 
-  // Cleanup on unmount
   useEffect(() => {
     return () => {
       disconnect();
