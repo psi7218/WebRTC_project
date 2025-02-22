@@ -88,7 +88,7 @@ const SideTab = () => {
               className="stroke-green group-hover:stroke-white transition-colors duration-1"
             />
           </div>
-          {/* 툴팁 */}
+
           <div className="absolute left-full ml-4 top-1/2 -translate-y-1/2 hidden group-hover:block">
             <div className="relative">
               <div className="absolute right-full top-1/2 -translate-y-1/2 border-8 border-transparent border-r-[#18191c]" />

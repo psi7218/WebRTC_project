@@ -53,7 +53,6 @@ const VoiceChannel = () => {
       });
 
       newSession.on("sessionDisconnected", () => {
-        console.log("Session disconnected");
         disconnect();
       });
       await newSession.connect(token, {

@@ -1,4 +1,3 @@
-// 전역 레이아웃 관련 파일
 import Providers from "./providers";
 
 import type { Metadata } from "next";
